@@ -3,7 +3,7 @@
 # Amazon AWS - How To
 I explain every step so that it can made with the least of effort. If you follow this manual, each thing we setup will be in a basic state. The goal is, to provide a step by step manual where everyone can follow on how to set up some of the AWS services.
 
-## The most important applications:
+## The most common services:
 * **EC2:** Server, on which the deployed applications run.
 * **Elastic Beanstalk:** An envoirement to create and manage deployed applications.
 * **S3:** Online Storage for files
