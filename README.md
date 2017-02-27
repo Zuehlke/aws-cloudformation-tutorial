@@ -143,7 +143,9 @@ After you did that, go to the terminal and execute the command "gradle sonarqube
 ### Use the certificate for your application
 1. Go to the EC2 Dashboard
 1. Click on *Load Balancers*, select the load balancer for your EC2 instance
-1. TODO
+1. In the load balancer overview, click on the *Listeners* tab.
+1. *Add* -> *Load Balancer Protocol*: HTTPS, *Instance Port* 80, *SSL Certificate* -> *Choose an existing certificate from AWS Certificate Manager (ACM)* -> The certificate you requested (if it doesn't show up, the certifficate may not have been approved)
+1. *Save*
 
 
 
