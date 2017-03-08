@@ -15,27 +15,27 @@ I explain every step so that it can made with the least of effort. If you follow
 * **Certificate Manager:** Get trusted certificates for your domain (enable SSL, HTTPS)
 
 ## How to deploy a Java Webserver:
-1. Set up an EC2
 1. Open *Elastic Beanstalk*
 1. *Create New Application*
 1. Insert the name of your Application (the naming is a bit diffusing at this point, since *Application* does no mean a single instance of something. It is more or less a container for 1-* applications)
 1. *Actions* -> *Create New Environment* -> *Web Server Environment* (an *Environment* is understood as single application. If you run one instance of your app as *PROD* and one as *DEV*, each will have it's own environment, while they are in the same *Application*-Container)
 1. *Platform* -> Java
 1. Select *Upload your code* and upload your jar/war file
-1. Your program is now running successfully, although you won't be able to reach it from outside at this point.
+1. Your program is now running successfully. You can access it through the domain created by Elastic Beanstalk (subdomain.region.elasticbeanstalk.com)
+1. The following resources were created: EC2 Instance, Security Group, Auto Scaling Group, Amazon S3 bucket, Amazon CloudWatch alarms and a domain name
+1. Further steps: Set up a load balancer, set up a "Route 53"-Domain to point to the load balancer.
 
 ## Using Lambdas to run scheduled jobs
 This chapter assumes that you have a rest server where you want to trigger some routines.
+
 1. Open the lambda section on AWS.
 1. Click on *Create a Lambda Function*
 1. *Name* / *Description* -> Write any name/Description.
 1. (I highly recommend to use Python for this usecase. Java 8 is supported. Use a *lambda-canary* Blueprint for this.) Select *runtime* -> *python*
 1. «Code entry type» -> *Upload a zip file* select a zip file containing your code. Now, it is very important to have the right structure! Your Zip-File must contain the main python-script at root level. Package all the external libraries, that aren't part of python-2.7 at root level too. Your structure should then look something like this:
-
 ![zip-structure](images/lambda_zip-structure.png)
 
 1. OPTIONAL: The method suitable for a http call looks like that:
-
 ![zip-structure](images/lambda_example.png)
 
 1. Define Environment Variables if you need any.
@@ -52,6 +52,7 @@ Go to RDS > Parameter Groups
 Create a new Parameter Group with the following parameter:
 *max_allowed_packet = 268435456*
 We need to create a new RDS database for SonarQube (you may use an existing MySQL instance)
+
 1. Go to RDS Instances
 1. Launch a new DB instance
 1. Select MySQL
@@ -59,6 +60,7 @@ We need to create a new RDS database for SonarQube (you may use an existing MySQ
 
 ### Run SonarQube as EC2 Container
 Let's create a new container for SonarQube and add it to ELB load balancer to make it easily accessible
+
 1. Go to EC2 Container Service
 1. *Create a new cluster*
 1. On cluster details page, switch to *Task Definitions*
@@ -76,6 +78,7 @@ SONARQUBE_JDBC_PASSWORD = admin
 SONARQUBE_JDBC_URL = jdbc:mysql://YOUR_DB_PUBLIC_DNS_LINK:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true
 
 Once the task is defined, it's time to create the ELB:
+
 1. Got to EC2 Dashboard -> Load Balancers
 1. Create a new Load Balancer
 1. Select the "Classic Load Balancer"
