@@ -232,7 +232,7 @@
 							}
 						},
 						"sources": {
-							"/var/www/html": "https://wordpress.org/wordpress-4.2.4.tar.gz"
+							"/var/java": "https://github.com/yandypiedra/AWS_Cloud_Formation/archive/master.zip"
 						},
 						"files": {
 							"/tmp/config": {
