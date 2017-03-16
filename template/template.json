@@ -5,7 +5,7 @@
 		"KeyName": {
 			"Description": "Key Pair name",
 			"Type": "AWS::EC2::KeyPair::KeyName",
-			"Default": "testinstance_access"
+			"Default": "yapi"
 		}
 	},
 	"Mappings": {
@@ -31,8 +31,7 @@
 		},
 		"InternetGateway": {
 			"Type": "AWS::EC2::InternetGateway",
-			"Properties": {
-			}
+			"Properties": {}
 		},
 		"VPCGatewayAttachment": {
 			"Type": "AWS::EC2::VPCGatewayAttachment",
@@ -197,16 +196,15 @@
                       "/home/ec2-user": "https://github.com/yandypiedra/AWS_Cloud_Formation/archive/master.zip"
                     },
                     "files": {
-                      "/tmp/gradle_config": {
+                      "/tmp/depend_config": {
                         "content": {
-                          "Fn::Join": ["",
+                          "Fn::Join": [
+                            "",
                             [
                               "#!/bin/bash -ex\n",
-                              "chmod -R 777 gradle-3.4.1/\n",
-															"chmod -R 777 /home/ec2-user/AWS_Cloud_Formation-master/\n",
-															"/opt/gradle-3.4.1/bin/gradle build -p /home/ec2-user/AWS_Cloud_Formation-master/src/Hi/\n",
-															"chmod -R 777 /home/ec2-user/AWS_Cloud_Formation-master/src/Hi/build/libs/\n",
-															"/usr/lib/jvm/java-1.8.0-openjdk/bin/java -jar /home/ec2-user/AWS_Cloud_Formation-master/src/Hi/build/libs/hi-1.0-SNAPSHOT.jar\n"
+                              "chmod -R 755 gradle-3.4.1/\n",
+                              "echo \"PATH=$PATH:/opt/gradle-3.4.1/bin\" >> /etc/environment\n",
+                              "yum install -y java-1.8.0\n"
                             ]
                           ]
                         },
@@ -216,26 +214,46 @@
                       },
                       "/tmp/app_config": {
                         "content": {
-                          "Fn::Join": ["",
+                          "Fn::Join": [
+                            "",
                             [
                               "#!/bin/bash -ex\n",
-                              "chmod -R 777 AWS_Cloud_Formation-master/\n"
+                              "chmod -R 777 AWS_Cloud_Formation-master/\n",
+                              "/opt/gradle-3.4.1/bin/gradle build -p /home/ec2-user/AWS_Cloud_Formation-master/src/Hi/\n"
                             ]
                           ]
                         },
                         "mode": "000500",
                         "owner": "root",
                         "group": "root"
-                      }
+                      },
+											"/tmp/launch_server": {
+												"content": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "#!/bin/bash -ex\n",
+                              "chmod -R 777 AWS_Cloud_Formation-master/\n",
+                              "java -jar AWS_Cloud_Formation-master/src/Hi/build/libs/hi-1.0-SNAPSHOT.jar\n"
+                            ]
+                          ]
+                        },
+                        "mode": "000500",
+                        "owner": "root",
+                        "group": "root"
+											}
                     },
                     "commands": {
                       "01_config": {
-                          "command": "/tmp/gradle_config",
-                           "cwd" : "/opt"
+                        "command": "/tmp/depend_config",
+                        "cwd": "/opt"
                       },
                       "02_config": {
-                          "command": "/tmp/app_config",
-                           "cwd" : "/home/ec2-user"
+                        "command": "yum remove -y java-1.7.0-openjdk"
+                      },
+                      "03_config": {
+                        "command": "/tmp/app_config",
+                        "cwd": "/home/ec2-user"
                       }
                     }
                   }
@@ -268,7 +286,7 @@
 			},
 			"CreationPolicy": {
 				"ResourceSignal": {
-					"Timeout": "PT10M"
+					"Timeout": "PT15M"
 				}
 			},
 			"DependsOn": "VPCGatewayAttachment"
