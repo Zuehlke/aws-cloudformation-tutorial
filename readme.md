@@ -4,5 +4,6 @@ We are building a Spring Boot RESTful backend here using only AWS CloudFormation
 
 ## Mockup
 
+![simple_mockup](images/simple_overview.png)
 
 ## Template
