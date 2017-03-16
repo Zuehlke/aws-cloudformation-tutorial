@@ -114,7 +114,7 @@ Here we use the AWS::CloudFormation::Interface metadata key that defines how par
 }
 ```
 
-####Mappings
+#### Mappings
 Matches a key to a corresponding set of named values.
 
 Here we define a map EC2RegionMap, which contains different keys (region names). Each key contains a name-value pair representing the AMI ID for the AMI Name in the region represented by the key.
@@ -139,7 +139,7 @@ Here we define a map EC2RegionMap, which contains different keys (region names).
 }
 ```
 
-####Resources
+#### Resources
 
 ```json
 {
@@ -149,7 +149,7 @@ Here we define a map EC2RegionMap, which contains different keys (region names).
 }
 ```
 
-####Outputs
+#### Outputs
 Returns something from your template such as the public name of an EC2 server.
 
 Here we return the URL of the deployed Rest Webservice after the infrastructure was created.
