@@ -1,6 +1,6 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
-	"Description": "School Infrastructure",
+	"Description": "AWS playground",
 	"Parameters": {
 		"KeyName": {
 			"Description": "Key Pair name",
@@ -253,6 +253,10 @@
                       },
                       "03_config": {
                         "command": "/tmp/app_config",
+                        "cwd": "/home/ec2-user"
+                      },
+                      "04_config": {
+                        "command": "/tmp/launch_server",
                         "cwd": "/home/ec2-user"
                       }
                     }
