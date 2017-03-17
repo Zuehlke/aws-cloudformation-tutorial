@@ -265,14 +265,15 @@
 							"/home/ec2-user": "https://github.com/yandypiedra/AWS_Cloud_Formation/archive/master.zip"
 						},
 						"files": {
-							"/tmp/depend_config": {
+							"/tmp/java_setup": {
 								"content": {
 									"Fn::Join": [
 										"",
 										[
 											"#!/bin/bash -ex\n",
 											"chmod -R 755 gradle-3.4.1/\n",
-											"yum install -y java-1.8.0\n"
+											"yum install -y java-1.8.0\n",
+											"yum remove -y java-1.7.0-openjdk"
 										]
 									]
 								},
@@ -280,7 +281,7 @@
 								"owner": "root",
 								"group": "root"
 							},
-							"/tmp/app_config": {
+							"/tmp/app_setup": {
 								"content": {
 									"Fn::Join": [
 										"",
@@ -302,14 +303,11 @@
 						},
 						"commands": {
 							"01_config": {
-								"command": "/tmp/depend_config",
+								"command": "/tmp/java_setup",
 								"cwd": "/opt"
 							},
-							"02_config": {
-								"command": "yum remove -y java-1.7.0-openjdk"
-							},
 							"03_config": {
-								"command": "/tmp/app_config",
+								"command": "/tmp/app_setup",
 								"cwd": "/home/ec2-user"
 							}
 						}
@@ -345,7 +343,7 @@
 			},
 			"CreationPolicy": {
 				"ResourceSignal": {
-					"Timeout": "PT15M"
+					"Timeout": "PT10M"
 				}
 			},
 			"DependsOn": "VPCGatewayAttachment"
