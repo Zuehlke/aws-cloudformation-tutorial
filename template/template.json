@@ -268,11 +268,11 @@
 							"/tmp/java_setup": {
 								"content": {
 									"Fn::Join": [
-										"",
+										"\n",
 										[
-											"#!/bin/bash -ex\n",
-											"chmod -R 755 gradle-3.4.1/\n",
-											"yum install -y java-1.8.0\n",
+											"#!/bin/bash -ex",
+											"chmod -R 755 gradle-3.4.1/",
+											"yum install -y java-1.8.0",
 											"yum remove -y java-1.7.0-openjdk"
 										]
 									]
@@ -291,8 +291,7 @@
 											"sed -i -e 's#username_here#",{"Ref": "DBUser"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
 											"sed -i -e 's#password_here#",{"Ref": "DBPwd"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
 											"sed -i -e 's#dbUrl_here#jdbc:mysql://",{"Fn::GetAtt": ["Database", "Endpoint.Address"]},":3306/",{"Ref": "DBName"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
-											"/opt/gradle-3.4.1/bin/gradle build -p /home/ec2-user/AWS_Cloud_Formation-master/src/Hi/\n",
-											"echo configuration is done!!!!!!!!!!"
+											"/opt/gradle-3.4.1/bin/gradle build -p /home/ec2-user/AWS_Cloud_Formation-master/src/Hi/\n"
 										]
 									]
 								},
