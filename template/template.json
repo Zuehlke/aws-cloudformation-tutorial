@@ -6,41 +6,41 @@
 			"Description": "Name of an existing EC2 KeyPair to enable SSH access to the instances",
 			"Type": "AWS::EC2::KeyPair::KeyName"
 		},
-       "DBName": {
-        "Description": "Enter the name of the database",
-        "Type": "String",
-        "AllowedPattern": "[a-zA-Z]*"
-      },
-      "DBUser" : {
-        "Description" : "The database admin username",
-        "Type" : "String",
-        "MinLength" : "1",
-        "MaxLength" : "41",
-        "AllowedPattern" : "[a-zA-Z0-9]*"
-      },
-      "DBPwd" : {
-        "NoEcho" : "true",
-        "Description" : "The database admin password",
-        "Type" : "String",
-        "MinLength" : "8",
-        "MaxLength" : "41",
-        "AllowedPattern" : "[a-zA-Z0-9]*"
-      }
+		"DBName": {
+			"Description": "Enter the name of the database",
+			"Type": "String",
+			"AllowedPattern": "[a-zA-Z]*"
+		},
+		"DBUser" : {
+			"Description" : "The database admin username",
+			"Type" : "String",
+			"MinLength" : "1",
+			"MaxLength" : "41",
+			"AllowedPattern" : "[a-zA-Z0-9]*"
+		},
+		"DBPwd" : {
+			"NoEcho" : "true",
+			"Description" : "The database admin password",
+			"Type" : "String",
+			"MinLength" : "8",
+			"MaxLength" : "41",
+			"AllowedPattern" : "[a-zA-Z0-9]*"
+		}
 	},
-    "Metadata" : {
-      "AWS::CloudFormation::Interface" : {
-        "ParameterGroups" : [
-          {
-            "Label" : { "default" : "Database Configuration" },
-            "Parameters" : [ "DBName", "DBUser", "DBPwd"]
-          }
-          ,{
-            "Label" : { "default" : "EC2 Key Pair" },
-            "Parameters" : ["KeyName"]
-          }
-        ]
-      }
-    },
+	"Metadata" : {
+		"AWS::CloudFormation::Interface" : {
+			"ParameterGroups" : [
+				{
+					"Label" : { "default" : "Database Configuration" },
+					"Parameters" : [ "DBName", "DBUser", "DBPwd"]
+				}
+				,{
+					"Label" : { "default" : "EC2 Key Pair" },
+					"Parameters" : ["KeyName"]
+				}
+			]
+		}
+	},
 	"Mappings": {
 		"EC2RegionMap": {
 			"ap-northeast-1": {"AmazonLinuxAMIHVMEBSBacked64bit": "ami-cbf90ecb"},
@@ -214,107 +214,107 @@
 				}]
 			}
 		},
-        "DatabaseSecurityGroup": {
-          "Type": "AWS::EC2::SecurityGroup",
-          "Properties": {
-            "GroupDescription": "awsinaction-db-sg",
-            "VpcId": {"Ref": "VPC"},
-            "SecurityGroupIngress": [{
-              "IpProtocol": "tcp",
-              "FromPort": "3306",
-              "ToPort": "3306",
-              "SourceSecurityGroupId": {"Ref": "WebServerSecurityGroup"}
-            }]
-          }
-        },
-        "Database": {
-          "Type": "AWS::RDS::DBInstance",
-          "Properties": {
-            "AllocatedStorage": "5",
-            "BackupRetentionPeriod": "0",
-            "DBInstanceClass": "db.t2.micro",
-            "DBInstanceIdentifier": "awsinaction-db",
-            "DBName": {"Ref": "DBName"},
-            "Engine": "MySQL",
-            "MasterUsername": {"Ref": "DBUser"},
-            "MasterUserPassword": {"Ref": "DBPwd"},
-            "VPCSecurityGroups": [{"Fn::GetAtt": ["DatabaseSecurityGroup", "GroupId"]}],
-            "DBSubnetGroupName": {"Ref": "DBSubnetGroup"}
-          },
-          "DependsOn": "VPCGatewayAttachment"
-        },
-        "DBSubnetGroup" : {
-          "Type" : "AWS::RDS::DBSubnetGroup",
-          "Properties" : {
-            "DBSubnetGroupDescription" : "DB subnet group",
-            "SubnetIds": [{"Ref": "SubnetA"}, {"Ref": "SubnetB"}]
-          }
-        },
+		"DatabaseSecurityGroup": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "awsinaction-db-sg",
+				"VpcId": {"Ref": "VPC"},
+				"SecurityGroupIngress": [{
+					"IpProtocol": "tcp",
+					"FromPort": "3306",
+					"ToPort": "3306",
+					"SourceSecurityGroupId": {"Ref": "WebServerSecurityGroup"}
+				}]
+			}
+		},
+		"Database": {
+			"Type": "AWS::RDS::DBInstance",
+			"Properties": {
+				"AllocatedStorage": "5",
+				"BackupRetentionPeriod": "0",
+				"DBInstanceClass": "db.t2.micro",
+				"DBInstanceIdentifier": "awsinaction-db",
+				"DBName": {"Ref": "DBName"},
+				"Engine": "MySQL",
+				"MasterUsername": {"Ref": "DBUser"},
+				"MasterUserPassword": {"Ref": "DBPwd"},
+				"VPCSecurityGroups": [{"Fn::GetAtt": ["DatabaseSecurityGroup", "GroupId"]}],
+				"DBSubnetGroupName": {"Ref": "DBSubnetGroup"}
+			},
+			"DependsOn": "VPCGatewayAttachment"
+		},
+		"DBSubnetGroup" : {
+			"Type" : "AWS::RDS::DBSubnetGroup",
+			"Properties" : {
+				"DBSubnetGroupDescription" : "DB subnet group",
+				"SubnetIds": [{"Ref": "SubnetA"}, {"Ref": "SubnetB"}]
+			}
+		},
 		"LaunchConfiguration": {
 			"Type": "AWS::AutoScaling::LaunchConfiguration",
 			"Metadata": {
 				"AWS::CloudFormation::Init": {
-                  "config": {
-                    "packages": {
-                      "yum": {
-                        "java-1.8.0-openjdk-devel": []
-                      }
-                    },
-                    "sources": {
-                      "/opt": "https://services.gradle.org/distributions/gradle-3.4.1-bin.zip",
-                      "/home/ec2-user": "https://github.com/yandypiedra/AWS_Cloud_Formation/archive/master.zip"
-                    },
-                    "files": {
-                      "/tmp/depend_config": {
-                        "content": {
-                          "Fn::Join": [
-                            "",
-                            [
-                              "#!/bin/bash -ex\n",
-                              "chmod -R 755 gradle-3.4.1/\n",
-                              "yum install -y java-1.8.0\n"
-                            ]
-                          ]
-                        },
-                        "mode": "000500",
-                        "owner": "root",
-                        "group": "root"
-                      },
-                      "/tmp/app_config": {
-                        "content": {
-                          "Fn::Join": [
-                            "",
-                            [
-                              "#!/bin/bash -ex\n",
-                              "chmod -R 777 AWS_Cloud_Formation-master/\n",
-                              "sed -i -e 's#username_here#",{"Ref": "DBUser"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
-                              "sed -i -e 's#password_here#",{"Ref": "DBPwd"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
-                              "sed -i -e 's#dbUrl_here#jdbc:mysql://",{"Fn::GetAtt": ["Database", "Endpoint.Address"]},":3306/",{"Ref": "DBName"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
-                              "/opt/gradle-3.4.1/bin/gradle build -p /home/ec2-user/AWS_Cloud_Formation-master/src/Hi/\n",
-                              "echo configuration is done!!!!!!!!!!"
-                            ]
-                          ]
-                        },
-                        "mode": "000500",
-                        "owner": "root",
-                        "group": "root"
-                      }
-                    },
-                    "commands": {
-                      "01_config": {
-                        "command": "/tmp/depend_config",
-                        "cwd": "/opt"
-                      },
-                      "02_config": {
-                        "command": "yum remove -y java-1.7.0-openjdk"
-                      },
-                      "03_config": {
-                        "command": "/tmp/app_config",
-                        "cwd": "/home/ec2-user"
-                      }
-                    }
-                  }
-                }
+					"config": {
+						"packages": {
+							"yum": {
+								"java-1.8.0-openjdk-devel": []
+							}
+						},
+						"sources": {
+							"/opt": "https://services.gradle.org/distributions/gradle-3.4.1-bin.zip",
+							"/home/ec2-user": "https://github.com/yandypiedra/AWS_Cloud_Formation/archive/master.zip"
+						},
+						"files": {
+							"/tmp/depend_config": {
+								"content": {
+									"Fn::Join": [
+										"",
+										[
+											"#!/bin/bash -ex\n",
+											"chmod -R 755 gradle-3.4.1/\n",
+											"yum install -y java-1.8.0\n"
+										]
+									]
+								},
+								"mode": "000500",
+								"owner": "root",
+								"group": "root"
+							},
+							"/tmp/app_config": {
+								"content": {
+									"Fn::Join": [
+										"",
+										[
+											"#!/bin/bash -ex\n",
+											"chmod -R 777 AWS_Cloud_Formation-master/\n",
+											"sed -i -e 's#username_here#",{"Ref": "DBUser"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
+											"sed -i -e 's#password_here#",{"Ref": "DBPwd"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
+											"sed -i -e 's#dbUrl_here#jdbc:mysql://",{"Fn::GetAtt": ["Database", "Endpoint.Address"]},":3306/",{"Ref": "DBName"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
+											"/opt/gradle-3.4.1/bin/gradle build -p /home/ec2-user/AWS_Cloud_Formation-master/src/Hi/\n",
+											"echo configuration is done!!!!!!!!!!"
+										]
+									]
+								},
+								"mode": "000500",
+								"owner": "root",
+								"group": "root"
+							}
+						},
+						"commands": {
+							"01_config": {
+								"command": "/tmp/depend_config",
+								"cwd": "/opt"
+							},
+							"02_config": {
+								"command": "yum remove -y java-1.7.0-openjdk"
+							},
+							"03_config": {
+								"command": "/tmp/app_config",
+								"cwd": "/home/ec2-user"
+							}
+						}
+					}
+				}
 			},
 			"Properties": {
 				"EbsOptimized": false,
