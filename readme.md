@@ -1,9 +1,12 @@
 # How to properly setup a Spring Boot Application using CloudFormation
+## Intro
+The goal of this project is to give you a rocket start into AWS CloudFormation. It should lead you through the process of setting up a backend for yourself in only minutes. Adapting the template to other stacks/technologies should be as easy as possible. The focus lays on scalability and security. 
 
-We are building a Spring Boot RESTful backend here using only AWS CloudFormation. The focus lays on scalability and security. We include a mysql database to which our application automatically connects to.
+We are building a Spring Boot RESTful backend here using only AWS CloudFormation. We include a MySql database, to which our application automatically connects to.
+
+We are always happy to get your support. If you find anything that could be better, we highly appreciate your feedback. :)
 
 ## Infrastructure
-
 ![simple_mockup](images/simple_overview.png)
 
 ## Description
@@ -13,16 +16,17 @@ For building the infrastructure we will use four different AWS services:
 
 ## CloudFormation Template
 A template is a JSON or YAML formatted text file that describes the AWS infrastructure. We will use  the JSON format for building our infrastructure.
-A template provides the following characteristics:
+A template provides the following advantages:
 
 - Create a complete stack
+- Keep everything in a single template
 - Replace components/resources as updates without losing data (auto-migration)
 - Custom parameters (environment variables)
 - Manage deployments
 - Manageable over the cli or the webinterface
 
 
-## Main components
+## Main sections
 
 The template is divided into several sections.
 
@@ -38,19 +42,14 @@ The template is divided into several sections.
 }
 ```
 
-### Description
-
 #### Format Version
 Specifies the AWS CloudFormation template version that the template conforms to.
-
 
 #### Description
 A custom description you can write for your project.
 
-
 #### Parameters
 Specifies values that you can pass in to the template at runtime (when you create or update a stack). Those can be handed over as json file or over the console.
-
 
 #### Metadata
 Contains objects that provide additional information about the template. 
@@ -134,6 +133,8 @@ Here we return the URL of the deployed Rest Webservice after the infrastructure 
 ## How to define custom parameters?
 
 Here we define that the name of an existing EC2 KeyPair to enable SSH access to the instances, the database's name, database's username and database's password should be passed as parameter when we create the stack.
+
+Those variables are either handed over by JSON (separate file) or just like this over the command line.
 
 ```json
 {
