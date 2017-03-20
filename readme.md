@@ -439,7 +439,7 @@ Here we instantiate a loadbalancer which can increase or reduce the amount of in
 ⋅⋅1. Timeout: Timeout until a check reports "failed" back.
 ⋅⋅1. UnhealthyThreshold: Numner of unsuccessful checks before instance gets *Unhealthy*.
 - **SecurityGroups:** Here you can link the SecurityGroups for this defined for this loadbalancer.
-
+- **Scheme:** If the loadbalancer is attached to a VPC, it can be specified, how it can be accessed. *internal* or *internet-facing*.
 
 ```json
 "LoadBalancerSecurityGroup": {
@@ -457,6 +457,8 @@ Here we instantiate a loadbalancer which can increase or reduce the amount of in
 },
 ...
 ```
+
+SecurityGroup for the loadbalancer. Allows the TCP port 80.
 
 ```json
 "WebServerSecurityGroup": {
@@ -480,7 +482,9 @@ Here we instantiate a loadbalancer which can increase or reduce the amount of in
 ...
 ```
 
+SecurityGroup for the application and SSH. Allows port 22 and also port 8080. The Loadbalancer will connect here.
 
+- **SourceSecurityGroupId:** Assures that only connections going through the * WebServerSecurityGroup* (our application) are allowed.
 
 ```json
 "DatabaseSecurityGroup": {
@@ -499,6 +503,9 @@ Here we instantiate a loadbalancer which can increase or reduce the amount of in
 ...
 ```
 
+SecurityGroup for the database.
+
+- **SourceSecurityGroupId:** Assures that only connections going through the *LoadBalancerSecurityGroup* are allowed.
 
 ```json
 "Database": {
@@ -519,6 +526,24 @@ Here we instantiate a loadbalancer which can increase or reduce the amount of in
 },
 ...
 ```
+
+This block creates the RDS database.
+
+**Type:** RDS Database instance
+**AllocatedStorage:** DB storage in GiB
+**BackupRetentionPeriod:** 
+**:** 
+**:** 
+**:** 
+**:** 
+**:** 
+**:** 
+**:** 
+**:** 
+**:** 
+**:** 
+**:** 
+**:** 
 
 ```json
 "DBSubnetGroup" : {
