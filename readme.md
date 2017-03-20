@@ -12,7 +12,7 @@ We are always happy to get your support. If you find anything that could be bett
 ## How to start asap?
 1. [Create an IAM User and setup the aws cli](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html) 
 1. Open a terminal and insert: 
-```json
+```bash
 aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack --template-body file:/Users/raphael/Desktop/workspace/other/aws-tutorials/template/template.json --parameters ParameterKey=KeyName,ParameterValue=KeyToSuccess ParameterKey=DBName,ParameterValue=TheDbName ParameterKey=DBPwd,ParameterValue=Th3P455w0rd ParameterKey=DBUser,ParameterValue=TheDbUser
 ```
 1. Done
