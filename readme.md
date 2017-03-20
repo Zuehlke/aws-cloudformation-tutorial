@@ -10,14 +10,13 @@ We are always happy to get your support. If you find anything that could be bett
 ![simple_mockup](images/simple_overview.png)
 
 ## How to start asap?
-1. [Create an IAM User and setup the aws cli](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html) 
+1. [Create an IAM User and setup the aws cli](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
+1. Create a key called "theKeyToSuccess" in the [webinterface](https://console.aws.amazon.com/console/home) -> EC2 -> Key Pairs -> *Create Key Pair*
 1. Open a terminal and insert: 
 ```bash
 aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack --template-body file:/Users/raphael/Desktop/workspace/other/aws-tutorials/template/template.json --parameters ParameterKey=KeyName,ParameterValue=KeyToSuccess ParameterKey=DBName,ParameterValue=TheDbName ParameterKey=DBPwd,ParameterValue=Th3P455w0rd ParameterKey=DBUser,ParameterValue=TheDbUser
 ```
 1. Done
-
-
 
 ## Description
 For building the infrastructure we will use four different AWS services:
@@ -90,7 +89,7 @@ Here we use the AWS::CloudFormation::Interface metadata key that defines how par
 #### Mappings
 Matches a key to a corresponding set of named values.
 
-Here we define a map EC2RegionMap, which contains different keys (region names). Each key contains a name-value pair representing the AMI ID for the AMI Name in the region represented by the key.
+Here we define a map EC2RegionMap, which contains different keys (region names). Each key contains a name-value pair representing the [AMI](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) ID for the AMI Name in the region represented by the key.
 
 ```json
 {
@@ -124,7 +123,7 @@ The resources/instances you want to allocate for your cloud. Here you define ser
 ```
 
 #### Outputs
-After creation, this returns something from your template such as the public name of an EC2 server.
+[After creation, this returns something from your template such as the public name of an EC2 server.](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html)
 
 Here we return the URL of the deployed Rest Webservice after the infrastructure was created.
 
@@ -179,5 +178,47 @@ Those variables are either handed over by JSON (separate file) or just like this
 }
 ```
 
+## Template description
 
+```json
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Sample Infrastructure",
+...
+```
 
+- AWSTemplateFormatVersion: Version of the template. This is the most recent one.
+- Description: A custom description for your project. Doesn't matter what you type here.
+
+```json
+"Parameters": {
+		"KeyName": {
+			"Description": "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+			"Type": "AWS::EC2::KeyPair::KeyName"
+		},
+		"DBName": {
+			"Description": "Enter the name of the database",
+			"Type": "String",
+			"AllowedPattern": "[a-zA-Z]*"
+		},
+		"DBUser" : {
+			"Description" : "The database admin username",
+			"Type" : "String",
+			"MinLength" : "1",
+			"MaxLength" : "41",
+			"AllowedPattern" : "[a-zA-Z0-9]*"
+		},
+		"DBPwd" : {
+			"NoEcho" : "true",
+			"Description" : "The database admin password",
+			"Type" : "String",
+			"MinLength" : "8",
+			"MaxLength" : "41",
+			"AllowedPattern" : "[a-zA-Z0-9]*"
+		}
+	},
+	...
+}
+```
+	
+Keyname: The name of the key
