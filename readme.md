@@ -9,6 +9,16 @@ We are always happy to get your support. If you find anything that could be bett
 ## Infrastructure
 ![simple_mockup](images/simple_overview.png)
 
+## How to start asap?
+Setup the AWS cli
+Create an IAM User access
+
+Open a terminal and insert:
+
+```aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack --template-body file:/Users/raphael/Desktop/workspace/other/aws-tutorials/template/template.json --parameters ParameterKey=KeyName,ParameterValue=KeyToSuccess ParameterKey=DBName,ParameterValue=TheDbName ParameterKey=DBPwd,ParameterValue=Th3P455w0rd ParameterKey=DBUser,ParameterValue=TheDbUser```
+
+
+
 ## Description
 For building the infrastructure we will use four different AWS services:
 - *Elastic Load Balancing (ELB)* used to distribute the traffic to the web servers behind it.- *Elastic Compute Cloud (EC2)*, two virtual Linux servers called Amazon Linux. The Tomcat web server and Spring Boot application will be installed on each virtual server.- *Relational Database Service (RDS)* providing a MySQL database. The Spring Boot application relies on this database. - *Security groups* used to control the network traffic like firewall. With security groups, we will configure the load balancer so that it only accepts request on port 443 from the internet, the virtual servers accept connections from outside on port 22 (SSH) and connections on port 8080 only from the load balancer. MySQL only accepts connections on port 3306 from the virtual servers.
