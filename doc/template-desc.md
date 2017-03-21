@@ -350,21 +350,21 @@ SecurityGroup for the database.
 
 This block creates the RDS database. The application will get it's *application.properties* file adapted to the parameters which are set here.
 
-**Type:** RDS Database instance
-**AllocatedStorage:** DB storage in GiB
-**BackupRetentionPeriod:** Delete DB backups after X days
-**DBInstanceClass:** The size of the instance. The bigger, the more expensive
-**:** 
-**:** 
-**:** 
-**:** 
-**:** 
-**:** 
-**:** 
-**:** 
-**:** 
-**:** 
-**:** 
+- **Type:** RDS Database instance
+- **AllocatedStorage:** DB storage in GiB
+- **BackupRetentionPeriod:** Delete DB backups after X days
+- **DBInstanceClass:** The size of the instance. The bigger, the more expensive
+- **DBInstanceIdentifier:** A name for the DB instance. This only influences the DB link and is therefore optional.
+- **DBName:** The name of the database being created
+- **Engine:** The type of database you want, we use mysql in our example
+- **MasterUsername:** The username for our DB instance. We hand this one over as parameter
+- **MasterUserPassword:** The password for our DB instance. We hand this one over as parameter
+- **VPCSecurityGroups:** The ID of the SecurityGroup our instance is attached to
+- **DBSubnetGroupName:** The Subnet to associate with the DB
+- **DependsOn:** This makes sure, that 
+- **:** 
+- **:** 
+- **:** 
 
 ```json
 "DBSubnetGroup" : {

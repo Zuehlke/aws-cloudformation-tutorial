@@ -217,7 +217,7 @@
 		"DatabaseSecurityGroup": {
 			"Type": "AWS::EC2::SecurityGroup",
 			"Properties": {
-				"GroupDescription": "awsinaction-db-sg",
+				"GroupDescription": "database-sg",
 				"VpcId": {"Ref": "VPC"},
 				"SecurityGroupIngress": [{
 					"IpProtocol": "tcp",
@@ -233,7 +233,7 @@
 				"AllocatedStorage": "5",
 				"BackupRetentionPeriod": "0",
 				"DBInstanceClass": "db.t2.micro",
-				"DBInstanceIdentifier": "awsinaction-db",
+				"DBInstanceIdentifier": "cool-db",
 				"DBName": {"Ref": "DBName"},
 				"Engine": "MySQL",
 				"MasterUsername": {"Ref": "DBUser"},
