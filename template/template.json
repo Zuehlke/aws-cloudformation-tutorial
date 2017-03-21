@@ -262,7 +262,7 @@
 						},
 						"sources": {
 							"/opt": "https://services.gradle.org/distributions/gradle-3.4.1-bin.zip",
-							"/home/ec2-user": "https://github.com/yandypiedra/AWS_Cloud_Formation/archive/master.zip"
+							"/home/ec2-user": "https://github.com/Zuehlke/aws-tutorials/archive/master.zip"
 						},
 						"files": {
 							"/tmp/java_setup": {
