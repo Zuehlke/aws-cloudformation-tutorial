@@ -287,11 +287,11 @@
 										"",
 										[
 											"#!/bin/bash -ex\n",
-											"chmod -R 777 AWS_Cloud_Formation-master/\n",
-											"sed -i -e 's#username_here#",{"Ref": "DBUser"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
-											"sed -i -e 's#password_here#",{"Ref": "DBPwd"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
-											"sed -i -e 's#dbUrl_here#jdbc:mysql://",{"Fn::GetAtt": ["Database", "Endpoint.Address"]},":3306/",{"Ref": "DBName"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
-											"/opt/gradle-3.4.1/bin/gradle build -p /home/ec2-user/AWS_Cloud_Formation-master/src/Hi/\n"
+											"chmod -R 777 aws-tutorials-master/\n",
+											"sed -i -e 's#username_here#",{"Ref": "DBUser"},"#' aws-tutorials-master/src/Hi/src/main/resources/application.properties\n",
+											"sed -i -e 's#password_here#",{"Ref": "DBPwd"},"#' aws-tutorials-master/src/Hi/src/main/resources/application.properties\n",
+											"sed -i -e 's#dbUrl_here#jdbc:mysql://",{"Fn::GetAtt": ["Database", "Endpoint.Address"]},":3306/",{"Ref": "DBName"},"#' aws-tutorials-master/src/Hi/src/main/resources/application.properties\n",
+											"/opt/gradle-3.4.1/bin/gradle build -p /home/ec2-user/aws-tutorials-master/src/Hi/\n"
 										]
 									]
 								},
@@ -325,8 +325,8 @@
 					"yum update -y aws-cfn-bootstrap\n",
 					"/opt/aws/bin/cfn-init -v --stack ", {"Ref": "AWS::StackName"}, " --resource LaunchConfiguration --region ", {"Ref": "AWS::Region"}, "\n",
 					"/opt/aws/bin/cfn-signal -e $? --stack ", {"Ref": "AWS::StackName"}, " --resource AutoScalingGroup --region ", {"Ref": "AWS::Region"}, "\n",
-					"chmod 777 -R /home/ec2-user/AWS_Cloud_Formation-master/build/libs/\n",
-					"nohup java -jar /home/ec2-user/AWS_Cloud_Formation-master/src/Hi/build/libs/hi-1.0-SNAPSHOT.jar\n"
+					"chmod 777 -R /home/ec2-user/aws-tutorials-master/build/libs/\n",
+					"nohup java -jar /home/ec2-user/aws-tutorials-master/src/Hi/build/libs/hi-1.0-SNAPSHOT.jar\n"
 				]]}}
 			}
 		},
