@@ -325,7 +325,7 @@
 					"yum update -y aws-cfn-bootstrap\n",
 					"/opt/aws/bin/cfn-init -v --stack ", {"Ref": "AWS::StackName"}, " --resource LaunchConfiguration --region ", {"Ref": "AWS::Region"}, "\n",
 					"/opt/aws/bin/cfn-signal -e $? --stack ", {"Ref": "AWS::StackName"}, " --resource AutoScalingGroup --region ", {"Ref": "AWS::Region"}, "\n",
-					"chmod 777 -R /home/ec2-user/aws-tutorials-master/build/libs/\n",
+					"chmod 777 -R /home/ec2-user/aws-tutorials-master/src/Hi/build/libs/\n",
 					"nohup java -jar /home/ec2-user/aws-tutorials-master/src/Hi/build/libs/hi-1.0-SNAPSHOT.jar\n"
 				]]}}
 			}
@@ -350,8 +350,8 @@
 	},
   "Outputs": {
     "URL": {
-      "Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/hi"]]},
-      "Description": "Rest Webservice URL"
+      "Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/to-vault"]]},
+      "Description": "URL to send Johannes to the vault."
     }
   }
 }

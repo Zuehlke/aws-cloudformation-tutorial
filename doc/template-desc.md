@@ -352,8 +352,8 @@ This block creates the RDS database. The application will get it's *application.
 
 **Type:** RDS Database instance
 **AllocatedStorage:** DB storage in GiB
-**BackupRetentionPeriod:** 
-**:** 
+**BackupRetentionPeriod:** Delete DB backups after X days
+**DBInstanceClass:** The size of the instance. The bigger, the more expensive
 **:** 
 **:** 
 **:** 
