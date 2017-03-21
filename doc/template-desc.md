@@ -354,17 +354,14 @@ This block creates the RDS database. The application will get it's *application.
 - **AllocatedStorage:** DB storage in GiB
 - **BackupRetentionPeriod:** Delete DB backups after X days
 - **DBInstanceClass:** The size of the instance. The bigger, the more expensive
-- **DBInstanceIdentifier:** A name for the DB instance. This only influences the DB link and is therefore optional.
+- **DBInstanceIdentifier:** A name for the DB instance. This is recommended, because otherwise, an IP from the DBSubnetGroup will be taken which can change during failover.
 - **DBName:** The name of the database being created
 - **Engine:** The type of database you want, we use mysql in our example
 - **MasterUsername:** The username for our DB instance. We hand this one over as parameter
 - **MasterUserPassword:** The password for our DB instance. We hand this one over as parameter
 - **VPCSecurityGroups:** The ID of the SecurityGroup our instance is attached to
 - **DBSubnetGroupName:** The Subnet to associate with the DB
-- **DependsOn:** This makes sure, that 
-- **:** 
-- **:** 
-- **:** 
+- **DependsOn:** This makes sure, that VPCGateWayAttachment is setup before the db instance
 
 ```json
 "DBSubnetGroup" : {
@@ -376,6 +373,9 @@ This block creates the RDS database. The application will get it's *application.
 },
 ...
 ```
+
+Here we create a DBSubnetGroup. Such a group has access to multiple subnets, specified by *SubnetIds*.
+
 
 ```json
 "LaunchConfiguration": {
@@ -390,11 +390,17 @@ This block creates the RDS database. The application will get it's *application.
 				},
 				"sources": {
 					"/opt": "https://services.gradle.org/distributions/gradle-3.4.1-bin.zip",
-					"/home/ec2-user": "https://github.com/yandypiedra/AWS_Cloud_Formation/archive/master.zip"
+					"/home/ec2-user": "https://github.com/Zuehlke/aws-tutorials/archive/master.zip"
 				},
 				...
 ```
-			
+
+This is one of the most important parts. AutoScaling is able to scale the amount of instances running. If the load on those increase, more instances will be allocated (and visa versa).
+
+The *AWS::CloudFormation::Init* section has multiple attributes, but the general idea is, that you can define the script that runs, after your EC2 booted up. We define a config-block here that contains some packages and information we need.
+
+- **packages:** The packages we want to have installed bevor we go. In this case, we define *yum* as command, with which we install Java 8.
+- **sources:** Here we can define links to packed files, which will lead into downloading and unpacking in the fodler we define as key ("opt/" or "/home/ec2-user").
 
 ```json
 "files": {
@@ -436,6 +442,17 @@ This block creates the RDS database. The application will get it's *application.
 ...
 ```
 
+In the *files* section, we can define some files that get written into our instance at a specific location.
+
+The key of each block within the file is also it's absolute path. */tmp/java_setup* in this case points to a file called *java_setup* within the folder */tmp*.
+
+- **Content:** The content of a file
+- **Fn::Join:** You might have stepped over *Fn::Join* already. All this function does is concatenate multiple strings together. You can add a "Delimiter" between the strings. In the first example, we used *\n* to put each string on a new line.
+- **Ref:** This parameter takes a variable and inserts it. In our case, the DBName we specified.
+- **mode:** First three digits are to create a symlink (no idea when this would be of much use) and the last 3 digits represent the permissions of a file (777 is the lowest security, meaning every user can do everything with it). [You can learn more here.](https://en.wikipedia.org/wiki/Chmod)
+- **owner:** The owner (user) of the file
+- **group:** The group for the file
+
 ```json
 "commands": {
 	"01_config": {
@@ -452,9 +469,13 @@ This block creates the RDS database. The application will get it's *application.
 ...
 ```
 
+Commands are here to execute those files. We wrote some shell-scripts up there, using those commands will run them. You can also explicitly specify the order those are run, but like in our example, you can just name them alphabetically in the order they should run.
+
+- **commands:** The files to execute
+- **cwd:** The place where those scripts are run. Example: If you run a command in *cws: /home/ec2-user*, you can use relative links from this location in your shell-scripts.
+
 ```json
 "Properties": {
-	"EbsOptimized": false,
 	"ImageId": {"Fn::FindInMap": ["EC2RegionMap", {"Ref": "AWS::Region"}, "AmazonLinuxAMIHVMEBSBacked64bit"]},
 	"InstanceType": "t2.micro",
 	"SecurityGroups": [{"Ref": "WebServerSecurityGroup"}],
@@ -472,6 +493,12 @@ This block creates the RDS database. The application will get it's *application.
 ...
 ```
 
+- **ImageId:** Gets the id of the AMI that is mapped into the region-table
+- **KeyName:** The KeyName you specified in the webinterface before: EC2 -> Key Pairs
+- **AssociatePublicIpAddress:** Specifies wether an EC2 instance should get a public IP address or not
+- **UserData:** Script that will be executes after a successful launch of an EC2 instance.
+
+The interesting thing here is, how we start our backend: We use *nohup*, which decouples the process from the bash and lets the script terminate. If we would not do that, our backup would start and the script could only continue, if it would crash. This would lead to a rollback.
 
 ```json
 "AutoScalingGroup": {
@@ -494,6 +521,14 @@ This block creates the RDS database. The application will get it's *application.
 ...
 ```
 
+The *AutoScalingGroup* controls our *LoadBalancer*. It defines some rules, which the *LoadBalancers* need to follow.
+
+- **LoadBalancerNames:** The affected loadbalancers
+- **LaunchConfigurationName:** The name of the launchconfiguration, since we wan't to start our instances with the same setup.
+- **MinSize:** The minimum amount of instances we want to keep alive.
+- **MaxSize:** The maximum amount of instanced we want to instantiate (depending on the load).
+- **DesiredCapacity:** The default amount of instances.
+
 ```json
 "Outputs": {
 	"URL": {"Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/hi"]]},
@@ -501,3 +536,5 @@ This block creates the RDS database. The application will get it's *application.
 	}
 }
 ```
+
+After successful stack creation, everything you define in the output-block will be printed out. In our example, we print the *URL*, which executes an action within our application. We also print a *Description* out. Those JSON-keys can be used freely and aren't bound to specificaitons.
