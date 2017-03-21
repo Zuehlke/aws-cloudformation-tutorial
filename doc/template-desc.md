@@ -348,7 +348,7 @@ SecurityGroup for the database.
 ...
 ```
 
-This block creates the RDS database.
+This block creates the RDS database. The application will get it's *application.properties* file adapted to the parameters which are set here.
 
 **Type:** RDS Database instance
 **AllocatedStorage:** DB storage in GiB
