@@ -166,9 +166,9 @@ In this block, we define all the resources we want to allocate.
 },
 ```
 
-- **RouteTable:** TODO
-- **RouteTableAssociation:** TODO
-- **RoutePublicNATToInternet:** TODO
+- **RouteTable:** RouteTables determine, where network traffic is directed.
+- **RouteTableAssociation:** Connects a RouteTable to a Subnet
+- **RoutePublicNATToInternet:** Wether if the route is internet-facing or not
 
 ```json
 "NetworkAcl": {
@@ -216,11 +216,14 @@ In this block, we define all the resources we want to allocate.
 ...
 ```
 
-- **NetworkAcl:** TODO
-- **SubnetNetworkAclAssociationA:** TODO
-- **NetworkAclEntryIngress:** TODO
-- **NetworkAclEntryEgress:** TODO
-
+- **NetworkAcl:** TODO Like a network security group in a VPC
+- **SubnetNetworkAclAssociationA:** Connect the Subnet with the ACL
+- **NetworkAclEntryIngress:** 
+⋅⋅* **RuleNumber:** The entries are processed in the ascending order of the rulenumber.
+- **ProtocolNumner:** Either write -1 or place a ProtocolNumber
+- **RuleAction:** Whether to allow or deny traffic that matches the rule.
+- **Egress:** Whether this rule applies to egress traffic from the subnet (true) or ingress traffic to the subnet (false).
+- **CidrBlock:** The IPv4 CIDR range to allow or deny, in CIDR notation (e.g., 172.16.0.0/24).
 
 ```json
 "LoadBalancer": {
@@ -375,7 +378,6 @@ This block creates the RDS database. The application will get it's *application.
 ```
 
 Here we create a DBSubnetGroup. Such a group has access to multiple subnets, specified by *SubnetIds*.
-
 
 ```json
 "LaunchConfiguration": {
