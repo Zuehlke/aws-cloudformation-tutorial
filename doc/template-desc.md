@@ -216,10 +216,12 @@ In this block, we define all the resources we want to allocate.
 ...
 ```
 
-- **NetworkAcl:** TODO Like a network security group in a VPC
+- **NetworkAcl:** Like a network security group in a VPC
 - **SubnetNetworkAclAssociationA:** Connect the Subnet with the ACL
 - **NetworkAclEntryIngress:** 
-⋅⋅* **RuleNumber:** The entries are processed in the ascending order of the rulenumber.
+
+
+- **RuleNumber:** The entries are processed in the ascending order of the rulenumber.
 - **ProtocolNumner:** Either write -1 or place a ProtocolNumber
 - **RuleAction:** Whether to allow or deny traffic that matches the rule.
 - **Egress:** Whether this rule applies to egress traffic from the subnet (true) or ingress traffic to the subnet (false).
@@ -539,4 +541,4 @@ The *AutoScalingGroup* controls our *LoadBalancer*. It defines some rules, which
 }
 ```
 
-After successful stack creation, everything you define in the output-block will be printed out. In our example, we print the *URL*, which executes an action within our application. We also print a *Description* out. Those JSON-keys can be used freely and aren't bound to specificaitons.
+After successful stack creation, everything you define in the output-block will be printed out. In our example, we print the *URL*, which executes an action within our application. We also print a *Description* which describes our URL.
