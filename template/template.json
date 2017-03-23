@@ -303,13 +303,13 @@
 					"yum update -y aws-cfn-bootstrap\n",
 					"/opt/aws/bin/cfn-init -v --stack ", {"Ref": "AWS::StackName"}, " --resource LaunchConfiguration --region ", {"Ref": "AWS::Region"}, "\n",
 					"/opt/aws/bin/cfn-signal -e $? --stack ", {"Ref": "AWS::StackName"}, " --resource AutoScalingGroup --region ", {"Ref": "AWS::Region"}, "\n",
-					"sudo yum update\n",
-					"sudo yum install ruby\n",
-					"sudo yum install wget\n",
+					"yum update\n",
+					"yum install ruby\n",
+					"yum install wget\n",
 					"cd /home/ec2-user\n",
 					"wget https://aws-codedeploy-", {"Ref": "AWS::Region"}, ".s3.amazonaws.com/latest/install\n",
 					"chmod +x ./install\n",
-					"sudo ./install auto\n"
+					"./install auto\n"
 				]]}}
 			}
 		},
