@@ -303,7 +303,7 @@
 					"yum update -y aws-cfn-bootstrap\n",
 					"/opt/aws/bin/cfn-init -v --stack ", {"Ref": "AWS::StackName"}, " --resource LaunchConfiguration --region ", {"Ref": "AWS::Region"}, "\n",
 					"/opt/aws/bin/cfn-signal -e $? --stack ", {"Ref": "AWS::StackName"}, " --resource AutoScalingGroup --region ", {"Ref": "AWS::Region"}, "\n",
-					"yum update\n",
+					"yum update -y\n",
 					"yum install ruby\n",
 					"yum install wget\n",
 					"cd /home/ec2-user\n",
