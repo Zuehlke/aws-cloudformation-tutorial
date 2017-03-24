@@ -55,6 +55,43 @@
 		}
 	},
 	"Resources": {
+		"AdminRole": {
+		"//Comment-key" : "ATTENTION, THIS IS ADMIN ACCESS!",
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+			"AssumeRolePolicyDocument": {
+				"Version" : "2012-10-17",
+				"Statement": [ {
+					"Effect": "Allow",
+					"Principal": {
+						"Service": [ "ec2.amazonaws.com", "cloudformation.amazonaws.com", "codedeploy.amazonaws.com" ]
+					},
+					"Action": [ "sts:AssumeRole" ]
+				} ]
+			},
+			"Path": "/",
+			"Policies": [ {
+				"PolicyName": "root",
+				"PolicyDocument": {
+					"Version" : "2012-10-17",
+					"Statement": [ {
+						"Effect": "Allow",
+						"Action": "*",
+						"Resource": "*"
+					} ]
+				}
+				} ]
+			}
+		},
+		"RootInstanceProfile": {
+			"Type": "AWS::IAM::InstanceProfile",
+			"Properties": {
+			"Path": "/",
+			"Roles": [ {
+				"Ref": "AdminRole"
+			} ]
+			}
+		},
 		"VPC": {
 			"Type": "AWS::EC2::VPC",
 			"Properties": {
@@ -295,6 +332,8 @@
 				"EbsOptimized": false,
 				"ImageId": {"Fn::FindInMap": ["EC2RegionMap", {"Ref": "AWS::Region"}, "AmazonLinuxAMIHVMEBSBacked64bit"]},
 				"InstanceType": "t2.micro",
+
+				"IamInstanceProfile": { "Ref": "RootInstanceProfile" },
 				"SecurityGroups": [{"Ref": "WebServerSecurityGroup"}],
 				"KeyName": {"Ref": "KeyName"},
 				"AssociatePublicIpAddress": true,
@@ -331,10 +370,10 @@
 			"DependsOn": "VPCGatewayAttachment"
 		}
 	},
-  "Outputs": {
-    "URL": {
-      "Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/to-vault"]]},
-      "Description": "Send Johannes to the vault..."
-    }
-  }
+	"Outputs": {
+		"URL": {
+			"Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/to-vault"]]},
+			"Description": "Send Johannes to the vault..."
+		}
+	}
 }
