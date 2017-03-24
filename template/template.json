@@ -56,7 +56,6 @@
 	},
 	"Resources": {
 		"AdminRole": {
-		"//Comment-key" : "ATTENTION, THIS IS ADMIN ACCESS!",
 			"Type": "AWS::IAM::Role",
 			"Properties": {
 			"AssumeRolePolicyDocument": {
