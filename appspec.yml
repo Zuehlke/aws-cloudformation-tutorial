@@ -1,0 +1,16 @@
+version: 0.0
+os: linux
+files:
+  - source: src/Hi/build/libs/hi-1.0-SNAPSHOT.jar
+    destination: ./
+  - source: deployment/scripts/AppStart.sh
+    destination: ./
+  - source: deployment/scripts/AppStop.sh
+    destination: ./
+hooks:
+  ApplicationStart:
+    - location: ./AppStart.sh
+      runas: root
+  ApplicationStop:
+    - location: ./AppStop.sh
+      runas: root

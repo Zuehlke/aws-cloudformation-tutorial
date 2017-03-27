@@ -1,0 +1,12 @@
+version: 0.1
+phases:
+  build:
+    commands:
+      gradle build -p src/Hi/
+artifacts:
+  type: zip
+  files:
+    - appspec.yml
+    - deployment/scripts/AppStart.sh
+    - deployment/scripts/AppStop.sh
+    - src/Hi/build/libs/hi-1.0-SNAPSHOT.jar

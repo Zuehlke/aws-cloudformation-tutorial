@@ -296,10 +296,6 @@
 								"java-1.8.0-openjdk-devel": []
 							}
 						},
-						"sources": {
-							"/opt": "https://services.gradle.org/distributions/gradle-3.4.1-bin.zip",
-							"/home/ec2-user": "https://github.com/Zuehlke/aws-tutorials/archive/feature/code-pipeline.zip"
-						},
 						"files": {
 							"/tmp/java_setup": {
 								"content": {
