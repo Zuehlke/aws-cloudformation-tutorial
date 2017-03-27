@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("to-vault")
+@RequestMapping("persons")
 public class PersonController {
 
     @Autowired
