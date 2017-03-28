@@ -24,4 +24,3 @@ aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack -
 2. [Step-By-Step description of the template](doc/template-desc.md)
 3. [The raw template](template/template.json)
 4. [Cut out content that doesn't fit anymore and needs some love](doc/pleasemodernizeme.md)
-

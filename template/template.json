@@ -1,6 +1,6 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
-	"Description": "AWS in Action: chapter 2",
+	"Description": "Sample infrastructure",
 	"Parameters": {
 		"KeyName": {
 			"Description": "Name of an existing EC2 KeyPair to enable SSH access to the instances",
@@ -330,7 +330,7 @@
 			"Type": "AWS::ElasticLoadBalancing::LoadBalancer",
 			"Properties": {
 				"Subnets": [{"Ref": "SubnetA"}, {"Ref": "SubnetB"}],
-				"LoadBalancerName": "awsinaction-elb",
+				"LoadBalancerName": "sample-elb",
 				"Listeners": [{
 					"InstancePort": "8080",
 					"InstanceProtocol": "HTTP",
@@ -352,7 +352,7 @@
 		"LoadBalancerSecurityGroup": {
 			"Type": "AWS::EC2::SecurityGroup",
 			"Properties": {
-				"GroupDescription": "awsinaction-elb-sg",
+				"GroupDescription": "sample-elb-sg",
 				"VpcId": {"Ref": "VPC"},
 				"SecurityGroupIngress": [{
 					"CidrIp": "0.0.0.0/0",
@@ -365,7 +365,7 @@
 		"WebServerSecurityGroup": {
 			"Type": "AWS::EC2::SecurityGroup",
 			"Properties": {
-				"GroupDescription": "awsinaction-sg",
+				"GroupDescription": "sample-sg",
 				"VpcId": {"Ref": "VPC"},
 				"SecurityGroupIngress": [{
 					"CidrIp": "0.0.0.0/0",
@@ -494,7 +494,7 @@
 	},
 	"Outputs": {
 		"URLRest": {
-			"Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/wordpress"]]},
+			"Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/persons"]]},
 			"Description": "Rest URL"
 		}
 	}
