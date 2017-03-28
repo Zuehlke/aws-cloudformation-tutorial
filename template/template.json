@@ -13,8 +13,13 @@
 			"MaxLength": "64",
 			"ConstraintDescription": "Must contain only alphanumeric characters or hyphens, and cannot begin or end with a hyphen."
 		},
+		"S3BucketName": {
+			"Description": "The name of the S3 Bucket",
+			"Type": "String",
+			"AllowedPattern": "[a-zA-Z]*"
+		},
 		"DBName": {
-			"Description": "Enter the name of the database",
+			"Description": "The name of the database",
 			"Type": "String",
 			"AllowedPattern": "[a-zA-Z]*"
 		},
@@ -44,6 +49,13 @@
 			,{
 					"Label" : { "default" : "EC2 Key Pair" },
 					"Parameters" : ["KeyName"]
+				}
+			,{
+					"Label" : { "default" : "CodeDeploy Role" },
+					"Parameters" : ["ServiceRoleName"]
+				},{
+					"Label" : { "default" : "S3 Bucket" },
+					"Parameters" : ["S3BucketName"]
 				}
 			]
 		}
@@ -292,7 +304,13 @@
 				"CidrBlock": "0.0.0.0/0"
 			}
 		},
-		"MyApplication" : {
+		"S3CodeDeploy": {
+			"Type" : "AWS::S3::Bucket",
+			"Properties" : {
+				"BucketName" : {"Fn::Join": ["", [{"Ref": "AWS::Region"}, "-", {"Ref": "S3BucketName"}]]}
+			}
+		},
+		"CodeDeployApplication" : {
 			"Type" : "AWS::CodeDeploy::Application",
 			"Properties" : {
 				"ApplicationName" : "RestApp"
@@ -302,7 +320,7 @@
 			"Type" : "AWS::CodeDeploy::DeploymentGroup",
 			"Properties" : {
 				"DeploymentGroupName": "RestGroup",
-				"ApplicationName" : {"Ref" : "MyApplication"},
+				"ApplicationName" : {"Ref" : "CodeDeployApplication"},
 				"AutoScalingGroups" : [ {"Ref" : "AutoScalingGroup" } ],
 				"DeploymentConfigName": "CodeDeployDefault.OneAtATime",
 				"ServiceRoleArn" : {"Fn::GetAtt" : ["CodeDeployTrustRole", "Arn"] }
