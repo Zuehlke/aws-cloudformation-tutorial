@@ -1,4 +1,55 @@
-# Template description
+# CloudFormation Template
+
+A template is a JSON or YAML formatted text file that describes the AWS infrastructure. We will use the JSON format for building our infrastructure.
+
+A template provides the following advantages:
+
+- Supports a wide range of AWS Resources, allowing you to build a highly available, reliable, and scalable AWS infrastructure for your application needs.
+- Makes it easy to organize and deploy a collection of AWS resources.
+- Customized via parameters. For example, you can pass the RDS database size, EC2 instance types, database, and web server port numbers to AWS CloudFormation when you create a stack.
+- Can be used repeatedly to create identical copies of the same stack.
+- Manageable over the cli or the webinterface.
+
+## Overview
+
+The template is divided into several sections.
+
+```json
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Sample Infrastructure",
+	"Parameters": {...},
+	"Metadata" : {...},
+	"Mappings": {...},
+	"Resources": {...},
+	"Outputs": {...}
+}
+```
+
+#### Format Version
+Specifies the AWS CloudFormation template version that the template conforms to.
+
+#### Description
+A custom description you can write for your project.
+
+#### Parameters
+Specifies values that you can pass into the template at runtime (when you create or update a stack).
+
+#### Metadata
+Contains objects that provide additional information about the template. 
+
+#### Mappings
+Matches a key to a corresponding set of named values. These keys well be referenced on other parts of the template to get their stored values.
+
+#### Resources
+The resources you want to allocate for your cloud like load balancers, EC2 instances, databases, VPCs, Security groups, etc.
+
+#### Outputs
+
+Information you want to display after the creation of the stack. For instance the public DNS of a EC2 instance.
+
+
+## Description
 Step by Step description of what happens in the template and where we achieve what.
 
 ```json
@@ -9,7 +60,8 @@ Step by Step description of what happens in the template and where we achieve wh
 ```
 
 - **AWSTemplateFormatVersion:** Version of the template. This is the most recent one.
-- **Description:** A custom description for your project. Doesn't matter what you type here.
+- **Description:** A custom description for your project. Doesn't matter what you type here.<br/><br/>
+
 
 ```json
 "Parameters": {
@@ -42,8 +94,8 @@ Step by Step description of what happens in the template and where we achieve wh
 }
 ```
 	
-- **Keyname:** The name of the key. This is what we specified as "keyToSuccess". This key is used to encrypt login data and needed to launch instances. The private key is used to connect to your instance by SSH, the public key is used to launch instances.
-- **DBName/DBUser/DBPwd:** Those are custom parameters that we except. We will use those and replace the received values in *./src/Hi/src/main/resources/application.properties*. This makes sure, that our application connects to the database we instantiate in our example.
+- **Keyname:** The name of the key. This is what we specified as "keyToSuccess". This key is used to connect to your EC2 instances by SSH.
+- **DBName/DBUser/DBPwd:** The name, admin and password of the MySQL Database that will be created (Siehe Abschnitt Resources). We will use these values in *./src/Hi/src/main/resources/application.properties*. This makes sure, that our application connects to the database when it is started.<br/><br/>
 
 ```json
 "Metadata" : {
@@ -63,7 +115,8 @@ Step by Step description of what happens in the template and where we achieve wh
 ...
 ```
 
-**ParameterGroups:** Those tell AWS which parameter we expect. One cannot start the stack without providing those values.
+**ParameterGroups:** The AWS::CloudFormation::Interface metadata key defines how parameters are grouped and sorted in the AWS CloudFormation web interface. We create the group *Database Configuration* and specifies that the parameters  *DBName*, *DBUser*, *DBPwd* should be displayed in that order. Finally we define de group *EC2 Key Pair*.<br/><br/>
+
 
 ```json
 "Mappings": {
@@ -81,7 +134,8 @@ Step by Step description of what happens in the template and where we achieve wh
 },
 ...
 ```
-Those mappings map regions to the excpected AMIs. If we start our application for eu-central-1 (Frankfurt), we will the linked AMI for our EC2.
+
+The map EC2RegionMap contains different keys (region names). Each key contains a name-value pair representing the [AMI](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) ID for the AMI Name in the region represented by the key. If we create our stack in eu-central-1 (Frankfurt) the AMI ID will be linke for our EC2 intances.<br/><br/>
 
 ```json
 "Resources": {
