@@ -9,6 +9,12 @@ We are always happy to get your support. If you find anything that could be bett
 ### Infrastructure
 ![simple_mockup](doc/images/simple_overview.png)
 
+## Description
+For building the infrastructure we will use six different AWS services:
+- *Elastic Load Balancing (ELB)* used to distribute the traffic to the web servers behind it.- *Elastic Compute Cloud (EC2)*, two virtual Linux servers called Amazon Linux. The Tomcat web server and Spring Boot application will be installed on each virtual server.- *Relational Database Service (RDS)* providing a MySQL database. The Spring Boot application relies on this database. - *Security groups* used to control the network traffic like firewall. With security groups, we will configure the load balancer so that it only accepts request on port 443 from the internet, the virtual servers accept connections from outside on port 22 (SSH) and connections on port 8080 only from the load balancer. MySQL only accepts connections on port 3306 from the virtual servers.
+- *Virtual Private Cloud (VPC)* for launching our resources(EC2 instances, RDS, Load Balancing) in a virtual private network.
+- *AutoScalingGroup* ...
+
 ### How to start asap?
 1. [Create an IAM User and setup the aws cli](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
 1. Create a key called "keyToSuccess" in the [webinterface](https://console.aws.amazon.com/console/home) -> EC2 -> Key Pairs -> *Create Key Pair*
@@ -20,7 +26,6 @@ aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack -
 1. Done
 
 ## Table of Contents
-1. [Cloudformation Introduction](doc/template-overview.md)
-2. [Step-By-Step description of the template](doc/template-desc.md)
-3. [The raw template](template/template.json)
-4. [Cut out content that doesn't fit anymore and needs some love](doc/pleasemodernizeme.md)
+1. [Step-By-Step description of the template](doc/template-desc.md)
+1. [The raw template](template/template.json)
+1. [Cut out content that doesn't fit anymore and needs some love](doc/pleasemodernizeme.md)

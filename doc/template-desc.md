@@ -10,7 +10,7 @@ A template provides the following advantages:
 - Can be used repeatedly to create identical copies of the same stack.
 - Manageable over the cli or the webinterface.
 
-## Overview
+## Main Sections
 
 The template is divided into several sections.
 
