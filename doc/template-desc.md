@@ -135,7 +135,7 @@ Step by Step description of what happens in the template and where we achieve wh
 ...
 ```
 
-The map EC2RegionMap contains different keys (region names). Each key contains a name-value pair representing the [AMI](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) ID for the AMI Name in the region represented by the key. If we create our stack in eu-central-1 (Frankfurt) the AMI ID will be linke for our EC2 intances.<br/><br/>
+**EC2RegionMap:** A map that contains different keys (region names). Each key contains a name-value pair representing the [AMI](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) ID for the AMI Name in the region represented by the key. If we create our stack in the region eu-central-1 (Frankfurt), the AMI ID of this region will be used to create our EC2 intances.<br/><br/>
 
 ```json
 "Resources": {
@@ -162,9 +162,9 @@ The map EC2RegionMap contains different keys (region names). Each key contains a
 
 In this block, we define all the resources we want to allocate.
 
-- **VPC:** In the *Virtual Private Cloud* you can put your data like in any other network. The VPC is not accessible from the outside without explicitly allowing it through a security group. TODO (better description).
-- **InternetGateway:** Lets you access the internet from your components. Routing tables have to be defined therefore.
-- **VPCGatewayAttachment:** Attaches the *InternetGateway* to the VPC. This is done over the IDs that point to the other resources (Ref). 
+- **VPC:** Creates a *Virtual Private Cloud* that covers the CIDR Block 172.31.0.0/16.
+- **InternetGateway:** Lets the resources in the VPC access the internet. Routing tables have to be defined therefore.
+- **VPCGatewayAttachment:** Attaches the InternetGateway to the VPC.<br/><br/> 
 
 ```json
 "SubnetA": {
@@ -186,7 +186,8 @@ In this block, we define all the resources we want to allocate.
 ...
 ```
 
-**Subnet:** Creates a subnet within an existing VPC. This can be usefule if some applications within the same VPC use the same port.
+**Subnets:** Creates two subnets in the VPC.<br/><br/> 
+
 
 ```json
 "RouteTable": {
@@ -222,7 +223,8 @@ In this block, we define all the resources we want to allocate.
 
 - **RouteTable:** RouteTables determine, where network traffic is directed.
 - **RouteTableAssociation:** Connects a RouteTable to a Subnet
-- **RoutePublicNATToInternet:** Wether if the route is internet-facing or not
+- **RoutePublicNATToInternet:** Creates a new route in a route table within the VPC and routes everthing to the InternetGateway.<br/><br/> 
+
 
 ```json
 "NetworkAcl": {
@@ -270,16 +272,14 @@ In this block, we define all the resources we want to allocate.
 ...
 ```
 
-- **NetworkAcl:** Like a network security group in a VPC
-- **SubnetNetworkAclAssociationA:** Connect the Subnet with the ACL
-- **NetworkAclEntryIngress:** 
-
-
-- **RuleNumber:** The entries are processed in the ascending order of the rulenumber.
-- **ProtocolNumner:** Either write -1 or place a ProtocolNumber
+- **NetworkAcl:** Layer of security for the VPC that acts as a firewall for controlling traffic in and out of one or more subnets.
+- **SubnetNetworkAclAssociation:** Associates the NetworkAcl to a subnet.
+- **NetworkAclEntryIngress or Egress:** Each network ACL has a set of numbered ingress rules and a separate set of numbered egress rules.
+- **RuleNumber:** The entries are processed in the ascending order of the rule number.
+- **ProtocolNumner:** The IP protocol that the rule applies to, -1 for all protocols.
 - **RuleAction:** Whether to allow or deny traffic that matches the rule.
 - **Egress:** Whether this rule applies to egress traffic from the subnet (true) or ingress traffic to the subnet (false).
-- **CidrBlock:** The IPv4 CIDR range to allow or deny, in CIDR notation (e.g., 172.16.0.0/24).
+- **CidrBlock:** The IPv4 CIDR range to allow or deny. Here we allows all ranges.<br/><br/>
 
 ```json
 "LoadBalancer": {
@@ -308,18 +308,19 @@ In this block, we define all the resources we want to allocate.
 ...
 ```
 
-Here we instantiate a loadbalancer which can increase or reduce the amount of instances depending on the state of the current machines.
+Here we instantiate a load balancer. It will be used to forward the traffic from the internet to the EC2 instances.
 
-- **Subnets:** Here we declare the subnets for our instances.
-- **LoadBalancerName:** A random name for the loadbalancer.
-- **Listeners:** Define the port your application uses (InstanceProtocol), define the procotol of your instance (InstanceProtocol), define the port on which the LoadBalancer is listening 👂 (LoadBalancerPort, usually 80) and the procotol which the LoadBalancer needs to handle (Protocol). InstanceProtocol and Protocol need to have the same value.
+- **Subnets:** Attach the load balancer to the subnets A and B.
+- **LoadBalancerName:** Give a name to the load balancer.
+- **Listeners:** Define the port (InstancePort:8080) and protocol (InstanceProtocol:HTTP) your application in the EC2 instances uses. Define the port (LoadBalancerPort:80) and protocol (Protocol:HTTP) the LoadBalancer is listening 👂. 
 - **HealthCheck:** A healthcheck makes sure, that your application is up and running. You can configure alarms in CloudWatch to get notified if an instance gets "degraded". Those checks are being done by doing a *ping*.
-⋅⋅1. HealthCheck: Number of successful checks before instance gets back to *Healhty*.
-⋅⋅1. Interval: Interval in seconds between each health check.
-⋅⋅1. Timeout: Timeout until a check reports "failed" back.
-⋅⋅1. UnhealthyThreshold: Numner of unsuccessful checks before instance gets *Unhealthy*.
-- **SecurityGroups:** Here you can link the SecurityGroups for this defined for this loadbalancer.
-- **Scheme:** If the loadbalancer is attached to a VPC, it can be specified, how it can be accessed. *internal* or *internet-facing*.
+- **HealthCheck**: Number of successful checks before instance gets back to *Healhty*.
+- **Interval**: Interval in seconds between each health check.
+- **Timeout**: Timeout until a check reports "failed" back.
+- **UnhealthyThreshold**: Numner of unsuccessful checks before instance gets *Unhealthy*.
+- **SecurityGroups:** Here you can link the SecurityGroups defined for this loadbalancer.
+- **Scheme:** If the load balancer is attached to a VPC, it can be specified, how it can be accessed. *internal* or *internet-facing*.<br/><br/>
+
 
 ```json
 "LoadBalancerSecurityGroup": {
@@ -338,7 +339,7 @@ Here we instantiate a loadbalancer which can increase or reduce the amount of in
 ...
 ```
 
-SecurityGroup for the loadbalancer. Allows the TCP port 80.
+SecurityGroup for the loadbalancer used to control the network traffic like firewall. Allows request from every IP Address on port 80.<br/><br/>
 
 ```json
 "WebServerSecurityGroup": {
