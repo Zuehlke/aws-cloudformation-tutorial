@@ -1,0 +1,203 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Pipeline test",
+	"Parameters": {
+		"KeyName": {
+			"Description": "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+			"Type": "AWS::EC2::KeyPair::KeyName"
+		},
+        "GitHubRepo": {
+            "Type": "String"
+        }, 
+        "GitHubBranch": {
+            "Type": "String"
+        }, 
+        "GitHubToken": {
+            "Type": "String"
+        }, 
+        "GitHubUser": {
+            "Type": "String"
+        }, 
+        "TargetGroup": {
+            "Type": "String"
+        }, 
+        "StackName": {
+            "Type": "String"
+        }, 
+        "Repository": {
+            "Type": "String"
+        }, 
+        "Cluster": {
+            "Type": "String"
+        }, 
+        "TemplateBucket": {
+            "Type": "String"
+        }
+	},
+	"Mappings": {
+		"EC2RegionMap": {
+			"ap-northeast-1": {"AmazonLinuxAMIHVMEBSBacked64bit": "ami-cbf90ecb"},
+			"ap-southeast-1": {"AmazonLinuxAMIHVMEBSBacked64bit": "ami-68d8e93a"},
+			"ap-southeast-2": {"AmazonLinuxAMIHVMEBSBacked64bit": "ami-fd9cecc7"},
+			"eu-central-1": {"AmazonLinuxAMIHVMEBSBacked64bit": "ami-a8221fb5"},
+			"eu-west-1": {"AmazonLinuxAMIHVMEBSBacked64bit": "ami-a10897d6"},
+			"sa-east-1": {"AmazonLinuxAMIHVMEBSBacked64bit": "ami-b52890a8"},
+			"us-east-1": {"AmazonLinuxAMIHVMEBSBacked64bit": "ami-1ecae776"},
+			"us-west-1": {"AmazonLinuxAMIHVMEBSBacked64bit": "ami-d114f295"},
+			"us-west-2": {"AmazonLinuxAMIHVMEBSBacked64bit": "ami-e7527ed7"}
+		}
+	},
+    "Resources": {
+        "AdminRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+            "AssumeRolePolicyDocument": {
+                "Version" : "2012-10-17",
+                "Statement": [ {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": [ "ec2.amazonaws.com", "cloudformation.amazonaws.com", "codedeploy.amazonaws.com", "codepipeline.amazonaws.com" ]
+                    },
+                    "Action": [ "sts:AssumeRole" ]
+                } ]
+            },
+            "Path": "/",
+            "Policies": [ {
+                "PolicyName": "root",
+                "PolicyDocument": {
+                    "Version" : "2012-10-17",
+                    "Statement": [ {
+                        "Effect": "Allow",
+                        "Action": "*",
+                        "Resource": "*"
+                    } ]
+                }
+                } ]
+            }
+        },
+        "RootInstanceProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+            "Path": "/",
+            "Roles": [ {
+                "Ref": "AdminRole"
+            } ]
+            }
+        },
+
+        "S3Pipeline": {
+            "Type" : "AWS::S3::Bucket",
+            "Properties" : {
+                "BucketName" : "bucketforpipeline"
+            }
+        },
+        "Pipeline": {
+            "Type" : "AWS::CodePipeline::Pipeline",
+            "Properties" : {
+                "ArtifactStore" : {
+                    "Type": "S3",
+                    "Location": { "Ref" : "S3Pipeline" }
+                },
+                "RoleArn" : {"Fn::GetAtt" : ["AdminRole", "Arn"]},
+                "Stages" : [
+                    {
+                        "Name": "Source", 
+                        "Actions": [
+                            {
+                                "Name": "App", 
+                                "ActionTypeId": {
+                                    "Category": "Source", 
+                                    "Owner": "ThirdParty", 
+                                    "Version": 1, 
+                                    "Provider": "GitHub"
+                                }, 
+                                "Configuration": {
+                                    "Owner": {
+                                        "Ref": "GitHubUser"
+                                    }, 
+                                    "Repo": {
+                                        "Ref": "GitHubRepo"
+                                    }, 
+                                    "Branch": {
+                                        "Ref": "GitHubBranch"
+                                    }, 
+                                    "OAuthToken": {
+                                        "Ref": "GitHubToken"
+                                    }
+                                }, 
+                                "OutputArtifacts": [
+                                    {
+                                        "Name": "App"
+                                    }
+                                ], 
+                                "RunOrder": 1
+                            },
+                            {
+                                "Name": "Template", 
+                                "ActionTypeId": {
+                                    "Category": "Source", 
+                                    "Owner": "AWS", 
+                                    "Version": 1, 
+                                    "Provider": "S3"
+                                }, 
+                                "OutputArtifacts": [
+                                    {
+                                        "Name": "Template"
+                                    }
+                                ], 
+                                "RunOrder": 1, 
+                                "Configuration": {
+                                    "S3Bucket": {
+                                        "Ref": "TemplateBucket"
+                                    }, 
+                                    "S3ObjectKey": "templates.zip"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "Name": "Build", 
+                        "Actions": [
+                            {
+                                "Name": "Build", 
+                                "ActionTypeId": {
+                                    "Category": "Build", 
+                                    "Owner": "AWS", 
+                                    "Version": 1, 
+                                    "Provider": "CodeBuild"
+                                }, 
+
+                                "InputArtifacts": [
+                                    {
+                                        "Name": "App"
+                                    }
+                                ], 
+                                "OutputArtifacts": [
+                                    {
+                                        "Name": "BuildOutput"
+                                    }
+                                ], 
+                                "RunOrder": 1
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "DeploymentApplication" : {
+			"Type" : "AWS::CodeDeploy::Application",
+			"Properties" : {
+				"ApplicationName" : "AutoDeployment"
+			}
+		},
+		"DeploymentGroup" : {
+			"Type" : "AWS::CodeDeploy::DeploymentGroup",
+			"Properties" : {
+				"DeploymentGroupName": "DeploymentGroup",
+				"ApplicationName" : {"Ref" : "DeploymentApplication"},
+				"DeploymentConfigName": "CodeDeployDefault.OneAtATime",
+				"ServiceRoleArn" : {"Fn::GetAtt" : ["AdminRole", "Arn"] }
+			}
+		}
+    }
+}
