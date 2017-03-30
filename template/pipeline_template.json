@@ -17,19 +17,7 @@
         }, 
         "GitHubUser": {
             "Type": "String"
-        }, 
-        "TargetGroup": {
-            "Type": "String"
-        }, 
-        "StackName": {
-            "Type": "String"
-        }, 
-        "Repository": {
-            "Type": "String"
-        }, 
-        "Cluster": {
-            "Type": "String"
-        }, 
+        },
         "TemplateBucket": {
             "Type": "String"
         }
@@ -56,7 +44,7 @@
                 "Statement": [ {
                     "Effect": "Allow",
                     "Principal": {
-                        "Service": [ "ec2.amazonaws.com", "cloudformation.amazonaws.com", "codedeploy.amazonaws.com", "codepipeline.amazonaws.com" ]
+                        "Service": [ "ec2.amazonaws.com", "cloudformation.amazonaws.com", "codedeploy.amazonaws.com", "codepipeline.amazonaws.com", "codebuild.amazonaws.com" ]
                     },
                     "Action": [ "sts:AssumeRole" ]
                 } ]
@@ -75,15 +63,46 @@
                 } ]
             }
         },
-        "RootInstanceProfile": {
-            "Type": "AWS::IAM::InstanceProfile",
+        "CodePipelineServiceRole": {
+            "Type": "AWS::IAM::Role", 
             "Properties": {
-            "Path": "/",
-            "Roles": [ {
-                "Ref": "AdminRole"
-            } ]
+                "RoleName": {
+                    "Fn::Sub": "cp-${AWS::StackName}"
+                }, 
+                "Path": "/", 
+                "AssumeRolePolicyDocument": "{\n    \"Statement\": [{\n        \"Effect\": \"Allow\",\n        \"Principal\": { \"Service\": [ \"codepipeline.amazonaws.com\" ]},\n        \"Action\": [ \"sts:AssumeRole\" ]\n    }]\n}\n", 
+                "Policies": [
+                    {
+                        "PolicyName": "root", 
+                        "PolicyDocument": {
+                            "Version": "2012-10-17", 
+                            "Statement": [
+                                {
+                                    "Resource": [ "*" ], 
+                                    "Effect": "Allow", 
+                                    "Action": [
+                                        "s3:PutObject", 
+                                        "s3:GetObject", 
+                                        "s3:GetObjectVersion", 
+                                        "s3:GetBucketVersioning"
+                                    ]
+                                }, 
+                                {
+                                    "Resource": "*", 
+                                    "Effect": "Allow", 
+                                    "Action": [
+                                        "codebuild:StartBuild", 
+                                        "codebuild:BatchGetBuilds", 
+                                        "cloudformation:*", 
+                                        "iam:PassRole"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
             }
-        },
+        }, 
 
         "S3Pipeline": {
             "Type" : "AWS::S3::Bucket",
@@ -91,6 +110,36 @@
                 "BucketName" : "bucketforpipeline"
             }
         },
+        "ArtifactBucket": {
+            "Type": "AWS::S3::Bucket", 
+            "DeletionPolicy": "Retain"
+        }, 
+        "CodeBuildProject": {
+            "Type": "AWS::CodeBuild::Project", 
+            "Properties": {
+                "Artifacts": {
+                    "Location": {
+                        "Ref": "ArtifactBucket"
+                    }, 
+                    "Type": "S3"
+                }, 
+                "Source": {
+                    "Location": {
+                        "Fn::Sub": "${ArtifactBucket}/source.zip"
+                    }, 
+                    "Type": "S3"
+                }, 
+                "Environment": {
+                    "ComputeType": "BUILD_GENERAL1_SMALL", 
+                    "Image": "aws/codebuild/docker:1.12.1", 
+                    "Type": "LINUX_CONTAINER"
+                }, 
+                "Name": {
+                    "Ref": "AWS::StackName"
+                }, 
+                "ServiceRole": { "Fn::GetAtt": [ "AdminRole", "Arn" ] }
+            }
+        }, 
         "Pipeline": {
             "Type" : "AWS::CodePipeline::Pipeline",
             "Properties" : {
@@ -166,7 +215,11 @@
                                     "Version": 1, 
                                     "Provider": "CodeBuild"
                                 }, 
-
+                                "Configuration": {
+                                    "ProjectName": {
+                                        "Ref": "CodeBuildProject"
+                                    }
+                                }, 
                                 "InputArtifacts": [
                                     {
                                         "Name": "App"
