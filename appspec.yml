@@ -1,0 +1,12 @@
+version: 0.0
+os: linux
+files:
+  - source: src/Hi/build/libs/hi-1.0-SNAPSHOT.jar
+    destination: /home/ec2-user
+hooks:
+ ApplicationStart:
+    - location: scripts/start_app.sh
+      timeout: 300
+      runas: root
+
+

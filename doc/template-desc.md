@@ -1,4 +1,55 @@
-# Template description
+# CloudFormation Template
+
+A template is a JSON or YAML formatted text file that describes the AWS infrastructure. We will use the JSON format for building our infrastructure.
+
+A template provides the following advantages:
+
+- Supports a wide range of AWS Resources, allowing you to build a highly available, reliable, and scalable AWS infrastructure for your application needs.
+- Makes it easy to organize and deploy a collection of AWS resources.
+- Customized via parameters. For example, you can pass the RDS database size, EC2 instance types, database, and web server port numbers to AWS CloudFormation when you create a stack.
+- Can be used repeatedly to create identical copies of the same stack.
+- Manageable over the cli or the webinterface.
+
+## Main Sections
+
+The template is divided into several sections.
+
+```json
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Sample Infrastructure",
+	"Parameters": {...},
+	"Metadata" : {...},
+	"Mappings": {...},
+	"Resources": {...},
+	"Outputs": {...}
+}
+```
+
+#### Format Version
+Specifies the AWS CloudFormation template version that the template conforms to.
+
+#### Description
+A custom description you can write for your project.
+
+#### Parameters
+Specifies values that you can pass into the template at runtime (when you create or update a stack).
+
+#### Metadata
+Contains objects that provide additional information about the template. 
+
+#### Mappings
+Matches a key to a corresponding set of named values. These keys well be referenced on other parts of the template to get their stored values.
+
+#### Resources
+The resources you want to allocate for your cloud like load balancers, EC2 instances, databases, VPCs, Security groups, etc.
+
+#### Outputs
+
+Information you want to display after the creation of the stack. For instance the public DNS of a EC2 instance.
+
+
+## Description
 Step by Step description of what happens in the template and where we achieve what.
 
 ```json
@@ -9,7 +60,8 @@ Step by Step description of what happens in the template and where we achieve wh
 ```
 
 - **AWSTemplateFormatVersion:** Version of the template. This is the most recent one.
-- **Description:** A custom description for your project. Doesn't matter what you type here.
+- **Description:** A custom description for your project. Doesn't matter what you type here.<br/><br/>
+
 
 ```json
 "Parameters": {
@@ -42,8 +94,8 @@ Step by Step description of what happens in the template and where we achieve wh
 }
 ```
 	
-- **Keyname:** The name of the key. This is what we specified as "keyToSuccess". This key is used to encrypt login data and needed to launch instances. The private key is used to connect to your instance by SSH, the public key is used to launch instances.
-- **DBName/DBUser/DBPwd:** Those are custom parameters that we except. We will use those and replace the received values in *./src/Hi/src/main/resources/application.properties*. This makes sure, that our application connects to the database we instantiate in our example.
+- **Keyname:** The name of the key. This is what we specified as "keyToSuccess". This key is used to connect to your EC2 instances by SSH.
+- **DBName/DBUser/DBPwd:** The name, admin and password of the MySQL Database that will be created (Siehe Abschnitt Resources). We will use these values in *./src/Hi/src/main/resources/application.properties*. This makes sure, that our application connects to the database when it is started.<br/><br/>
 
 ```json
 "Metadata" : {
@@ -63,7 +115,8 @@ Step by Step description of what happens in the template and where we achieve wh
 ...
 ```
 
-**ParameterGroups:** Those tell AWS which parameter we expect. One cannot start the stack without providing those values.
+**ParameterGroups:** The AWS::CloudFormation::Interface metadata key defines how parameters are grouped and sorted in the AWS CloudFormation web interface. We create the group *Database Configuration* and specifies that the parameters  *DBName*, *DBUser*, *DBPwd* should be displayed in that order. Finally we define de group *EC2 Key Pair*.<br/><br/>
+
 
 ```json
 "Mappings": {
@@ -81,7 +134,8 @@ Step by Step description of what happens in the template and where we achieve wh
 },
 ...
 ```
-Those mappings map regions to the excpected AMIs. If we start our application for eu-central-1 (Frankfurt), we will the linked AMI for our EC2.
+
+- **EC2RegionMap:** A map that contains different keys (region names). Each key contains a name-value pair representing the [AMI](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) ID for the AMI Name in the region represented by the key. If we create our stack in the region eu-central-1 (Frankfurt), the AMI ID of this region will be used to create our EC2 intances.<br/><br/>
 
 ```json
 "Resources": {
@@ -108,9 +162,9 @@ Those mappings map regions to the excpected AMIs. If we start our application fo
 
 In this block, we define all the resources we want to allocate.
 
-- **VPC:** In the *Virtual Private Cloud* you can put your data like in any other network. The VPC is not accessible from the outside without explicitly allowing it through a security group. TODO (better description).
-- **InternetGateway:** Lets you access the internet from your components. Routing tables have to be defined therefore.
-- **VPCGatewayAttachment:** Attaches the *InternetGateway* to the VPC. This is done over the IDs that point to the other resources (Ref). 
+- **VPC:** Creates a *Virtual Private Cloud* that covers the CIDR Block 172.31.0.0/16.
+- **InternetGateway:** Lets the resources in the VPC access the internet. Routing tables have to be defined therefore.
+- **VPCGatewayAttachment:** Attaches the InternetGateway to the VPC.<br/><br/> 
 
 ```json
 "SubnetA": {
@@ -132,7 +186,8 @@ In this block, we define all the resources we want to allocate.
 ...
 ```
 
-**Subnet:** Creates a subnet within an existing VPC. This can be usefule if some applications within the same VPC use the same port.
+- **Subnets:** Creates two subnets in the VPC.<br/><br/> 
+
 
 ```json
 "RouteTable": {
@@ -168,7 +223,8 @@ In this block, we define all the resources we want to allocate.
 
 - **RouteTable:** RouteTables determine, where network traffic is directed.
 - **RouteTableAssociation:** Connects a RouteTable to a Subnet
-- **RoutePublicNATToInternet:** Wether if the route is internet-facing or not
+- **RoutePublicNATToInternet:** Creates a new route in a route table within the VPC and routes everthing to the InternetGateway.<br/><br/> 
+
 
 ```json
 "NetworkAcl": {
@@ -216,16 +272,14 @@ In this block, we define all the resources we want to allocate.
 ...
 ```
 
-- **NetworkAcl:** Like a network security group in a VPC
-- **SubnetNetworkAclAssociationA:** Connect the Subnet with the ACL
-- **NetworkAclEntryIngress:** 
-
-
-- **RuleNumber:** The entries are processed in the ascending order of the rulenumber.
-- **ProtocolNumner:** Either write -1 or place a ProtocolNumber
+- **NetworkAcl:** Layer of security for the VPC that acts as a firewall for controlling traffic in and out of one or more subnets.
+- **SubnetNetworkAclAssociation:** Associates the NetworkAcl to a subnet.
+- **NetworkAclEntryIngress or Egress:** Each network ACL has a set of numbered ingress rules and a separate set of numbered egress rules.
+- **RuleNumber:** The entries are processed in the ascending order of the rule number.
+- **ProtocolNumner:** The IP protocol that the rule applies to, -1 for all protocols.
 - **RuleAction:** Whether to allow or deny traffic that matches the rule.
 - **Egress:** Whether this rule applies to egress traffic from the subnet (true) or ingress traffic to the subnet (false).
-- **CidrBlock:** The IPv4 CIDR range to allow or deny, in CIDR notation (e.g., 172.16.0.0/24).
+- **CidrBlock:** The IPv4 CIDR range to allow or deny. Here we allows all ranges.<br/><br/>
 
 ```json
 "LoadBalancer": {
@@ -254,18 +308,19 @@ In this block, we define all the resources we want to allocate.
 ...
 ```
 
-Here we instantiate a loadbalancer which can increase or reduce the amount of instances depending on the state of the current machines.
+Here we instantiate a load balancer. It will be used to forward the traffic from the internet to the EC2 instances.
 
-- **Subnets:** Here we declare the subnets for our instances.
-- **LoadBalancerName:** A random name for the loadbalancer.
-- **Listeners:** Define the port your application uses (InstanceProtocol), define the procotol of your instance (InstanceProtocol), define the port on which the LoadBalancer is listening 👂 (LoadBalancerPort, usually 80) and the procotol which the LoadBalancer needs to handle (Protocol). InstanceProtocol and Protocol need to have the same value.
+- **Subnets:** Attach the load balancer to the subnets A and B.
+- **LoadBalancerName:** Give a name to the load balancer.
+- **Listeners:** Define the port (InstancePort:8080) and protocol (InstanceProtocol:HTTP) your application in the EC2 instances uses. Define the port (LoadBalancerPort:80) and protocol (Protocol:HTTP) the LoadBalancer is listening 👂. 
 - **HealthCheck:** A healthcheck makes sure, that your application is up and running. You can configure alarms in CloudWatch to get notified if an instance gets "degraded". Those checks are being done by doing a *ping*.
-⋅⋅1. HealthCheck: Number of successful checks before instance gets back to *Healhty*.
-⋅⋅1. Interval: Interval in seconds between each health check.
-⋅⋅1. Timeout: Timeout until a check reports "failed" back.
-⋅⋅1. UnhealthyThreshold: Numner of unsuccessful checks before instance gets *Unhealthy*.
-- **SecurityGroups:** Here you can link the SecurityGroups for this defined for this loadbalancer.
-- **Scheme:** If the loadbalancer is attached to a VPC, it can be specified, how it can be accessed. *internal* or *internet-facing*.
+	- **HealthyThreshold**: Number of successful checks before instance gets back to *Healhty*.
+	- **Interval**: Interval in seconds between each health check.
+	- **Timeout**: Timeout until a check reports "failed" back.
+	- **UnhealthyThreshold**: Numner of unsuccessful checks before instance gets *Unhealthy*.
+- **SecurityGroups:** Here you can link the SecurityGroups defined for this loadbalancer.
+- **Scheme:** If the load balancer is attached to a VPC, it can be specified, how it can be accessed. *internal* or *internet-facing*.<br/><br/>
+
 
 ```json
 "LoadBalancerSecurityGroup": {
@@ -284,7 +339,7 @@ Here we instantiate a loadbalancer which can increase or reduce the amount of in
 ...
 ```
 
-SecurityGroup for the loadbalancer. Allows the TCP port 80.
+- **LoadBalancerSecurityGroup:** security group for the load balancer used to control the network traffic like firewall. Allows request from every IP Address on port 80.<br/><br/>
 
 ```json
 "WebServerSecurityGroup": {
@@ -308,9 +363,8 @@ SecurityGroup for the loadbalancer. Allows the TCP port 80.
 ...
 ```
 
-SecurityGroup for the application and SSH. Allows port 22 and also port 8080. The Loadbalancer will connect here.
+- **WebServerSecurityGroup:** security group for the EC2 instances. Allow connections on port 22 (SSH) from every IP address and on port 8080 (TCP) only from the load balancer.<br/><br/>
 
-- **SourceSecurityGroupId:** Assures that only connections going through the * WebServerSecurityGroup* (our application) are allowed.
 
 ```json
 "DatabaseSecurityGroup": {
@@ -329,9 +383,8 @@ SecurityGroup for the application and SSH. Allows port 22 and also port 8080. Th
 ...
 ```
 
-SecurityGroup for the database.
+- **DatabaseSecurityGroup:** security group for the database. Allow connections on port 3006 (TCP) only from the EC2 instances.<br/><br/>
 
-- **SourceSecurityGroupId:** Assures that only connections going through the *LoadBalancerSecurityGroup* are allowed.
 
 ```json
 "Database": {
@@ -340,7 +393,7 @@ SecurityGroup for the database.
 		"AllocatedStorage": "5",
 		"BackupRetentionPeriod": "0",
 		"DBInstanceClass": "db.t2.micro",
-		"DBInstanceIdentifier": "awsinaction-db",
+		"DBInstanceIdentifier": "school-db",
 		"DBName": {"Ref": "DBName"},
 		"Engine": "MySQL",
 		"MasterUsername": {"Ref": "DBUser"},
@@ -353,20 +406,18 @@ SecurityGroup for the database.
 ...
 ```
 
-This block creates the RDS database. The application will get it's *application.properties* file adapted to the parameters which are set here.
+This block creates the RDS database.
 
-- **Type:** RDS Database instance
-- **AllocatedStorage:** DB storage in GiB
-- **BackupRetentionPeriod:** Delete DB backups after X days
-- **DBInstanceClass:** The size of the instance. The bigger, the more expensive
-- **DBInstanceIdentifier:** A name for the DB instance. This is recommended, because otherwise, an IP from the DBSubnetGroup will be taken which can change during failover.
-- **DBName:** The name of the database being created
-- **Engine:** The type of database you want, we use mysql in our example
-- **MasterUsername:** The username for our DB instance. We hand this one over as parameter
-- **MasterUserPassword:** The password for our DB instance. We hand this one over as parameter
-- **VPCSecurityGroups:** The ID of the SecurityGroup our instance is attached to
-- **DBSubnetGroupName:** The Subnet to associate with the DB
-- **DependsOn:** This makes sure, that VPCGateWayAttachment is setup before the db instance
+- **AllocatedStorage:** DB storage in GiB.
+- **BackupRetentionPeriod:** Delete DB snapshots after X days.
+- **DBInstanceClass:** The name of the compute and memory capacity classes of the DB instance.
+- **DBInstanceIdentifier:** An identifier for the DB instance.
+- **DBName:** The name of the database being created. We hand this one over as parameter.
+- **Engine:** The type of database you want, we use mysql in our example.
+- **MasterUsername:** The username for our DB instance. We hand this one over as parameter.
+- **MasterUserPassword:** The password for our DB instance. We hand this one over as parameter.
+- **VPCSecurityGroups:** The ID of the SecurityGroup our instance is attached to.
+- **DBSubnetGroupName:** The Subnet group to associate with the DB.<br/><br/>
 
 ```json
 "DBSubnetGroup" : {
@@ -379,7 +430,7 @@ This block creates the RDS database. The application will get it's *application.
 ...
 ```
 
-Here we create a DBSubnetGroup. Such a group has access to multiple subnets, specified by *SubnetIds*.
+- **DBSubnetGroup:** The subnet group of the database. It contains the subnet A and B, specified by *SubnetIds*.<br/><br/>
 
 ```json
 "LaunchConfiguration": {
@@ -392,117 +443,82 @@ Here we create a DBSubnetGroup. Such a group has access to multiple subnets, spe
 						"java-1.8.0-openjdk-devel": []
 					}
 				},
-				"sources": {
-					"/opt": "https://services.gradle.org/distributions/gradle-3.4.1-bin.zip",
-					"/home/ec2-user": "https://github.com/Zuehlke/aws-tutorials/archive/master.zip"
-				},
+				"files": {
+						"/tmp/java_setup": {
+							"content": {
+								"Fn::Join": [
+									"\n",
+									[
+										"#!/bin/bash -ex",
+										"yum install -y java-1.8.0\n",
+										"yum remove -y java-1.7.0-openjdk\n"
+									]
+								]
+							},
+							"mode": "000500",
+							"owner": "root",
+							"group": "root"
+						}
+				 },
+				 "commands": {
+					"01_config": {
+					"command": "/tmp/java_setup",
+					"cwd": "/opt"
+						}
+					}
+				}
+			}
+		},
 				...
 ```
 
-This is one of the most important parts. AutoScaling is able to scale the amount of instances running. If the load on those increase, more instances will be allocated (and visa versa).
+The *LaunchConfiguration* block defines, what should be executed in the EC2 instances when they are created. 
 
-The *AWS::CloudFormation::Init* section has multiple attributes, but the general idea is, that you can define the script that runs, after your EC2 booted up. We define a config-block here that contains some packages and information we need.
+- **Metadata:** This attribute contains an *AWS::CloudFormation::Init* section that contains multiple attributes. The general idea is, that you can define scripts, that run after your EC2 instances booted up.
+	- **packages:** This key is used to download and install pre-packaged applications and components in the EC2 instances. Here we install the java-1.8.0-openjdk.
+	- **files:** In this section, we can define some files that get created into our instance at a specific location. The key of each block within the file is also it's absolute path. The key */tmp/java_setup* points to a file called *java_setup* within the folder */tmp*.
+		- **Content:** The content of a file. You might have stepped over *Fn::Join* already. All this function does is concatenate multiple strings together. You can add a "Delimiter" between the strings.
+		- **mode:** First three digits are to create a symlink and the last 3 digits represent the permissions of a file.
+		- **owner:** The owner of the file
+		- **group:** The group for the file
+	- **commands:** are used to execute the above defined file (script). If you have defined more than one file you can explicitly specify the order those are run. You can just name them alphabetically in the order they should run.
+		- **command:** The files to execute.
+		- **cwd:** The place where those scripts are run.<br/><br/>
 
-- **packages:** The packages we want to have installed bevor we go. In this case, we define *yum* as command, with which we install Java 8.
-- **sources:** Here we can define links to packed files, which will lead into downloading and unpacking in the fodler we define as key ("opt/" or "/home/ec2-user").
-
-```json
-"files": {
-	"/tmp/java_setup": {
-		"content": {
-			"Fn::Join": [
-				"\n",
-				[
-					"#!/bin/bash -ex",
-					"chmod -R 755 gradle-3.4.1/",
-					"yum install -y java-1.8.0",
-					"yum remove -y java-1.7.0-openjdk"
-				]
-			]
-		},
-		"mode": "000500",
-		"owner": "root",
-		"group": "root"
-	},
-	"/tmp/app_setup": {
-		"content": {
-			"Fn::Join": [
-				"",
-				[
-					"#!/bin/bash -ex\n",
-					"chmod -R 777 AWS_Cloud_Formation-master/\n",
-					"sed -i -e 's#username_here#",{"Ref": "DBUser"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
-					"sed -i -e 's#password_here#",{"Ref": "DBPwd"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
-					"sed -i -e 's#dbUrl_here#jdbc:mysql://",{"Fn::GetAtt": ["Database", "Endpoint.Address"]},":3306/",{"Ref": "DBName"},"#' AWS_Cloud_Formation-master/src/Hi/src/main/resources/application.properties\n",
-					"/opt/gradle-3.4.1/bin/gradle build -p /home/ec2-user/AWS_Cloud_Formation-master/src/Hi/\n"
-				]
-			]
-		},
-		"mode": "000500",
-		"owner": "root",
-		"group": "root"
-	}
-},
-...
-```
-
-In the *files* section, we can define some files that get written into our instance at a specific location.
-
-The key of each block within the file is also it's absolute path. */tmp/java_setup* in this case points to a file called *java_setup* within the folder */tmp*.
-
-- **Content:** The content of a file
-- **Fn::Join:** You might have stepped over *Fn::Join* already. All this function does is concatenate multiple strings together. You can add a "Delimiter" between the strings. In the first example, we used *\n* to put each string on a new line.
-- **Ref:** This parameter takes a variable and inserts it. In our case, the DBName we specified.
-- **mode:** First three digits are to create a symlink (no idea when this would be of much use) and the last 3 digits represent the permissions of a file (777 is the lowest security, meaning every user can do everything with it). [You can learn more here.](https://en.wikipedia.org/wiki/Chmod)
-- **owner:** The owner (user) of the file
-- **group:** The group for the file
-
-```json
-"commands": {
-	"01_config": {
-		"command": "/tmp/java_setup",
-		"cwd": "/opt"
-	},
-	"03_config": {
-		"command": "/tmp/app_setup",
-		"cwd": "/home/ec2-user"
-	}
-}
-...
-}
-...
-```
-
-Commands are here to execute those files. We wrote some shell-scripts up there, using those commands will run them. You can also explicitly specify the order those are run, but like in our example, you can just name them alphabetically in the order they should run.
-
-- **commands:** The files to execute
-- **cwd:** The place where those scripts are run. Example: If you run a command in *cws: /home/ec2-user*, you can use relative links from this location in your shell-scripts.
 
 ```json
 "Properties": {
-	"ImageId": {"Fn::FindInMap": ["EC2RegionMap", {"Ref": "AWS::Region"}, "AmazonLinuxAMIHVMEBSBacked64bit"]},
-	"InstanceType": "t2.micro",
-	"SecurityGroups": [{"Ref": "WebServerSecurityGroup"}],
-	"KeyName": {"Ref": "KeyName"},
-	"AssociatePublicIpAddress": true,
-	"UserData": {"Fn::Base64": {"Fn::Join": ["", [
-		"#!/bin/bash -ex\n",
-		"yum update -y aws-cfn-bootstrap\n",
-		"/opt/aws/bin/cfn-init -v --stack ", {"Ref": "AWS::StackName"}, " --resource LaunchConfiguration --region ", {"Ref": "AWS::Region"}, "\n",
-		"/opt/aws/bin/cfn-signal -e $? --stack ", {"Ref": "AWS::StackName"}, " --resource AutoScalingGroup --region ", {"Ref": "AWS::Region"}, "\n",
-		"chmod 777 -R /home/ec2-user/AWS_Cloud_Formation-master/build/libs/\n",
-		"nohup java -jar /home/ec2-user/AWS_Cloud_Formation-master/src/Hi/build/libs/hi-1.0-SNAPSHOT.jar\n"
-	]]}}
-}
+				"EbsOptimized": false,
+				"ImageId": {"Fn::FindInMap": ["EC2RegionMap", {"Ref": "AWS::Region"}, "AmazonLinuxAMIHVMEBSBacked64bit"]},
+				"InstanceType": "t2.micro",
+				"SecurityGroups": [{"Ref": "WebServerSecurityGroup"}],
+				"KeyName": {"Ref": "KeyName"},
+				"IamInstanceProfile": {"Ref": "InstanceRoleInstanceProfile"},
+				"AssociatePublicIpAddress": true,
+				"UserData": {"Fn::Base64": {"Fn::Join": ["", [
+					"#!/bin/bash -ex\n",
+					"yum update -y aws-cfn-bootstrap\n",
+					"/opt/aws/bin/cfn-init -v --stack ", {"Ref": "AWS::StackName"}, " --resource LaunchConfiguration --region ", {"Ref": "AWS::Region"}, "\n",
+					"yum update -y\n",
+                    "yum install -y ruby\n",
+                    "yum install -y wget\n",
+                    "cd /home/ec2-user\n",
+                    "wget https://aws-codedeploy-",{"Ref": "AWS::Region"},".s3.amazonaws.com/latest/install\n",
+                    "chmod +x ./install\n",
+                    "./install auto\n",
+                    "/opt/aws/bin/cfn-signal -e $? --stack ", {"Ref": "AWS::StackName"}, " --resource AutoScalingGroup --region ", {"Ref": "AWS::Region"}, "\n"
+                ]]}}
+			}
+		},
 ...
 ```
 
-- **ImageId:** Gets the id of the AMI that is mapped into the region-table
-- **KeyName:** The KeyName you specified in the webinterface before: EC2 -> Key Pairs
-- **AssociatePublicIpAddress:** Specifies wether an EC2 instance should get a public IP address or not
-- **UserData:** Script that will be executes after a successful launch of an EC2 instance.
-
-The interesting thing here is, how we start our backend: We use *nohup*, which decouples the process from the bash and lets the script terminate. If we would not do that, our backup would start and the script could only continue, if it would crash. This would lead to a rollback.
+- **ImageId:** Gets the id of the AMI for the selected region, that is located in the EC2RegionMap.
+- **InstanceType:** The instance type of the EC2 instances that will be created.
+- **KeyName:** The KeyName you specified in the web interface before: EC2 -> Key Pairs.
+- **IamInstanceProfile:** Name of the instance profile containing the IAM Role, who is allow to access S3 Buckets.
+- **AssociatePublicIpAddress:** Specifies wether an EC2 instance should get a public IP address or not.
+- **UserData:** Script that will be executed after a successful launch of an EC2 instance. He we install the code-deploy-agent, that will be used later by the CodeDeploy Service for automatic deployment.<br/><br/>
 
 ```json
 "AutoScalingGroup": {
@@ -525,13 +541,13 @@ The interesting thing here is, how we start our backend: We use *nohup*, which d
 ...
 ```
 
-The *AutoScalingGroup* controls our *LoadBalancer*. It defines some rules, which the *LoadBalancers* need to follow.
+The *AutoScalingGroup* block creates an auto scaling group.
 
-- **LoadBalancerNames:** The affected loadbalancers
-- **LaunchConfigurationName:** The name of the launchconfiguration, since we wan't to start our instances with the same setup.
-- **MinSize:** The minimum amount of instances we want to keep alive.
-- **MaxSize:** The maximum amount of instanced we want to instantiate (depending on the load).
-- **DesiredCapacity:** The default amount of instances.
+- **LoadBalancerNames:** the load balancers associated with this auto scaling group.
+- **LaunchConfigurationName:** The launch configuration associated with this auto scaling group.
+- **MinSize:** The minimum number of EC2 instances we want to keep alive in our auto scaling group.
+- **MaxSize:** The maximum number of EC2 instances we want to keep alive in our auto scaling group.
+- **DesiredCapacity:** The desire number of EC2 instances we want to keep alive in our auto scaling group.<br/><br/>
 
 ```json
 "Outputs": {
@@ -541,4 +557,5 @@ The *AutoScalingGroup* controls our *LoadBalancer*. It defines some rules, which
 }
 ```
 
-After successful stack creation, everything you define in the output-block will be printed out. In our example, we print the *URL*, which executes an action within our application. We also print a *Description* which describes our URL.
+- **Outputs:** After successful stack creation, everything you define in the output-block will be printed out. In our example, we print the *URL* to our Restful Webservice. We also print a *Description* which describes our URL.
+
