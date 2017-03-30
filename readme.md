@@ -1,4 +1,3 @@
-# How to properly setup a Spring Boot Application using CloudFormation
 ## Intro
 The goal of this project is to give you a rocket start into AWS CloudFormation. It should lead you through the process of setting up a backend for yourself in only minutes. Adapting the template to other stacks/technologies should be as easy as possible. The focus lays on scalability and security. 
 
@@ -6,7 +5,7 @@ We are building a Spring Boot RESTful backend here using only AWS CloudFormation
 
 We are always happy to get your support. If you find anything that could be better, we highly appreciate your feedback. :)
 
-### Infrastructure
+## Infrastructure V1
 ![simple_mockup](doc/images/infrastructure_pipeline.png)
 
 
@@ -16,7 +15,6 @@ For building the infrastructure we will use six different AWS services:
 - *Virtual Private Cloud (VPC)* for launching our resources(EC2 instances, RDS, Load Balancing) in a virtual private network.
 - *AutoScalingGroup* ...
 - *CodePipeLine*
-- *CodeDeploy*
 
 ### How to start asap?
 1. [Create an IAM User and setup the aws cli](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
@@ -32,3 +30,7 @@ aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack -
 1. [Step-By-Step description of the template](doc/template-desc.md)
 1. [The raw template](template/template.json)
 1. [Cut out content that doesn't fit anymore and needs some love](doc/pleasemodernizeme.md)
+
+
+## Infrastructure V2
+![simple_mockup](doc/images/infrastructure_jenkins_codePipeLine.png)
