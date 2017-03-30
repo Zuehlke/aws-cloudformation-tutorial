@@ -17,9 +17,6 @@
         }, 
         "GitHubUser": {
             "Type": "String"
-        },
-        "TemplateBucket": {
-            "Type": "String"
         }
 	},
 	"Mappings": {
@@ -104,7 +101,7 @@
             }
         }, 
 
-        "S3Pipeline": {
+        "PipelineBucket": {
             "Type" : "AWS::S3::Bucket",
             "Properties" : {
                 "BucketName" : "bucketforpipeline"
@@ -130,9 +127,9 @@
                     "Type": "S3"
                 }, 
                 "Environment": {
-                    "ComputeType": "BUILD_GENERAL1_SMALL", 
-                    "Image": "aws/codebuild/docker:1.12.1", 
-                    "Type": "LINUX_CONTAINER"
+                    "Type": "LINUX_CONTAINER",
+                    "ComputeType": "BUILD_GENERAL1_SMALL",
+                    "Image": "aws/codebuild/java:openjdk-8"
                 }, 
                 "Name": {
                     "Ref": "AWS::StackName"
@@ -145,7 +142,7 @@
             "Properties" : {
                 "ArtifactStore" : {
                     "Type": "S3",
-                    "Location": { "Ref" : "S3Pipeline" }
+                    "Location": { "Ref" : "PipelineBucket" }
                 },
                 "RoleArn" : {"Fn::GetAtt" : ["AdminRole", "Arn"]},
                 "Stages" : [
@@ -180,27 +177,6 @@
                                     }
                                 ], 
                                 "RunOrder": 1
-                            },
-                            {
-                                "Name": "Template", 
-                                "ActionTypeId": {
-                                    "Category": "Source", 
-                                    "Owner": "AWS", 
-                                    "Version": 1, 
-                                    "Provider": "S3"
-                                }, 
-                                "OutputArtifacts": [
-                                    {
-                                        "Name": "Template"
-                                    }
-                                ], 
-                                "RunOrder": 1, 
-                                "Configuration": {
-                                    "S3Bucket": {
-                                        "Ref": "TemplateBucket"
-                                    }, 
-                                    "S3ObjectKey": "templates.zip"
-                                }
                             }
                         ]
                     },
@@ -230,6 +206,30 @@
                                         "Name": "BuildOutput"
                                     }
                                 ], 
+                                "RunOrder": 1
+                            }
+                        ]
+                    },
+                    {
+                        "Name": "Beta",
+                        "Actions": [
+                            {
+                                "Name": "BetaAction",
+                                "InputArtifacts": [
+                                {
+                                    "Name": "BuildOutput"
+                                }
+                                ],
+                                "ActionTypeId": {
+                                "Category": "Deploy",
+                                "Owner": "AWS",
+                                "Version": "1",
+                                "Provider": "CodeDeploy"
+                                },
+                                "Configuration": {
+                                "ApplicationName": "FeaturePipelineApp",
+                                "DeploymentGroupName": "FeaturePipelineGroup"
+                                },
                                 "RunOrder": 1
                             }
                         ]
