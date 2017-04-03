@@ -8,6 +8,9 @@ files:
   - source: deployment_scripts/AppStop.sh
     destination: ./
 hooks:
+  BeforeInstall:
+    - location: deployment_scripts/CleanupOldVersion.sh
+      runas: root
   ApplicationStart:
     - location: deployment_scripts/AppStart.sh
       runas: root
