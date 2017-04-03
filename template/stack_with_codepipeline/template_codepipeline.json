@@ -68,7 +68,7 @@
                 "Statement": [ {
                     "Effect": "Allow",
                     "Principal": {
-                        "Service": [ "ec2.amazonaws.com", "cloudformation.amazonaws.com", "codedeploy.amazonaws.com", "codepipeline.amazonaws.com", "codebuild.amazonaws.com" ]
+                        "Service": [ "ec2.amazonaws.com", "cloudformation.amazonaws.com", "codedeploy.amazonaws.com", "codepipeline.amazonaws.com", "codebuild.amazonaws.com", "s3.amazonaws.com" ]
                     },
                     "Action": [ "sts:AssumeRole" ]
                 } ]
