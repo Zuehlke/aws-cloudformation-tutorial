@@ -7,7 +7,7 @@ We are building a Spring Boot RESTful backend here using only AWS CloudFormation
 
 We are always happy to get your support. If you find anything that could be better, we highly appreciate your feedback. :)
 
-1. Go to [Infrastructure with Infrastructure with AWS CodePipeline for continuous- integration and delivery.](#v1)
+1. Go to [Infrastructure with AWS CodePipeline for continuous- integration and delivery.](#v1)
 2. Go to [Infrastructure with Jenkins for continuous- integration and delivery.](#v2)
 
 
@@ -38,7 +38,7 @@ aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack -
 
 ## <a name="v2">Infrastructure with Jenkins for continuous- integration and delivery</a>
 
-![simple_mockup](doc/images/infrastructure_jenkins_codePipeLine.png)
+![simple_mockup](doc/images/infrastructure_jenkins_codeDeploy.png)
 
 ## Description
 For building the infrastructure we will use among others the following AWS services:
