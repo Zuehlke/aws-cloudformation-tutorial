@@ -297,8 +297,7 @@
 							}
 						},
 						"sources": {
-							"/opt": "https://services.gradle.org/distributions/gradle-3.4.1-bin.zip",
-							"/home/ec2-user": "https://github.com/Zuehlke/aws-tutorials/archive/master.zip"
+							"/opt": "https://services.gradle.org/distributions/gradle-3.4.1-bin.zip"
 						},
 						"files": {
 							"/tmp/java_setup": {
@@ -373,9 +372,6 @@
 		"URL": {
 			"Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/to-vault"]]},
 			"Description": "URL to send Johannes to the vault."
-		},
-		"AutoScalingGroupName": {
-			"Value": { "Fn:GetAtt": ["AutoScalingGroup", ""]}
 		}
 	}
 }
