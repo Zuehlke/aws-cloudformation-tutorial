@@ -3,9 +3,9 @@ os: linux
 files:
   - source: src/Hi/build/libs/hi-1.0-SNAPSHOT.jar
     destination: ./
-  - source: AppStart.sh
+  - source: deployment_scripts/AppStart.sh
     destination: ./
-  - source: AppStop.sh
+  - source: deployment_scripts/AppStop.sh
     destination: ./
 hooks:
   ApplicationStart:

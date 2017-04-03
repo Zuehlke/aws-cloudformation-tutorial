@@ -10,6 +10,6 @@ artifacts:
   type: zip
   files:
     - appspec.yml
-    - AppStart.sh
-    - AppStop.sh
+    - deployment_scripts/AppStart.sh
+    - deployment_scripts/AppStop.sh
     - src/Hi/build/libs/hi-1.0-SNAPSHOT.jar
