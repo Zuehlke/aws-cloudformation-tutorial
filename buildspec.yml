@@ -12,4 +12,5 @@ artifacts:
     - appspec.yml
     - deployment_scripts/AppStart.sh
     - deployment_scripts/AppStop.sh
+    - deployment_scripts/CleanupOldVersion.sh
     - src/Hi/build/libs/hi-1.0-SNAPSHOT.jar
