@@ -9,8 +9,8 @@ files:
     destination: ./
 hooks:
   ApplicationStart:
-    - location: ./AppStart.sh
+    - location: deployment_scripts/AppStart.sh
       runas: root
   ApplicationStop:
-    - location: ./AppStop.sh
+    - location: deployment_scripts/AppStop.sh
       runas: root
