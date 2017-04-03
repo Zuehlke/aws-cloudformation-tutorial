@@ -2,7 +2,10 @@ version: 0.1
 phases:
   build:
     commands:
-      gradle build -p src/Hi/
+      - sed -i -e 's#username_here#$DB_USERNAME#' aws-tutorials-$GITHUB_BRANCH/src/Hi/src/main/resources/application.properties
+      - sed -i -e 's#password_here#$DB_PASSWORD#' aws-tutorials-$GITHUB_BRANCH/src/Hi/src/main/resources/application.properties
+      - sed -i -e 's#dbUrl_here#jdbc:mysql://$DB_LINK:3306/$DB_Name#' aws-tutorials-$GITHUB_BRANCH/src/Hi/src/main/resources/application.properties
+      - gradle build -p src/Hi/
 artifacts:
   type: zip
   files:

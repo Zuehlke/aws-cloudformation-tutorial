@@ -372,7 +372,10 @@
 	"Outputs": {
 		"URL": {
 			"Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/to-vault"]]},
-			"Description": "Send Johannes to the vault..."
+			"Description": "URL to send Johannes to the vault."
+		},
+		"AutoScalingGroupName": {
+			"Value": { "Fn:GetAtt": ["AutoScalingGroup", ""]}
 		}
 	}
 }

@@ -17,6 +17,33 @@
         }, 
         "GitHubUser": {
             "Type": "String"
+        },
+        "AutoScalingGroup": {
+            "Type": "String"
+        },
+        "DBName": {
+			"Description": "Enter the name of the database",
+			"Type": "String",
+			"AllowedPattern": "[a-zA-Z]*"
+		},
+		"DBUser" : {
+			"Description" : "The database admin username",
+			"Type" : "String",
+			"MinLength" : "1",
+			"MaxLength" : "41",
+			"AllowedPattern" : "[a-zA-Z0-9]*"
+		},
+		"DBPwd" : {
+			"NoEcho" : "true",
+			"Description" : "The database admin password",
+			"Type" : "String",
+			"MinLength" : "8",
+			"MaxLength" : "41",
+			"AllowedPattern" : "[a-zA-Z0-9]*"
+		},
+        "DBLink": {
+            "Description" : "The PLAIN database DNS, no ports, dbname or anything",
+            "Type": "String"
         }
 	},
 	"Mappings": {
@@ -129,7 +156,25 @@
                 "Environment": {
                     "Type": "LINUX_CONTAINER",
                     "ComputeType": "BUILD_GENERAL1_SMALL",
-                    "Image": "aws/codebuild/java:openjdk-8"
+                    "Image": "aws/codebuild/java:openjdk-8",
+                    "EnvironmentVariables": [
+                        {
+                            "Name" : "DB_LINK",
+                            "Value" : {"Ref": "DBLink"}
+                        }, {
+                            "Name" : "DB_Name",
+                            "Value" : {"Ref": "DBName"}
+                        }, {
+                            "Name" : "DB_USERNAME",
+                            "Value" : {"Ref": "DBUser"}
+                        }, {
+                            "Name" : "DB_PASSWORD",
+                            "Value" : {"Ref": "DBPwd"}
+                        }, {
+                            "Name" : "GITHUB_BRANCH",
+                            "Value" : {"Ref": "GitHubBranch"}
+                        }
+                    ]
                 }, 
                 "Name": {
                     "Ref": "AWS::StackName"
@@ -214,21 +259,21 @@
                         "Name": "Beta",
                         "Actions": [
                             {
-                                "Name": "BetaAction",
+                                "Name": "Deploy",
                                 "InputArtifacts": [
-                                {
-                                    "Name": "BuildOutput"
-                                }
+                                    {
+                                        "Name": "BuildOutput"
+                                    }
                                 ],
                                 "ActionTypeId": {
-                                "Category": "Deploy",
-                                "Owner": "AWS",
-                                "Version": "1",
-                                "Provider": "CodeDeploy"
+                                    "Category": "Deploy",
+                                    "Owner": "AWS",
+                                    "Version": "1",
+                                    "Provider": "CodeDeploy"
                                 },
                                 "Configuration": {
-                                "ApplicationName": "FeaturePipelineApp",
-                                "DeploymentGroupName": "FeaturePipelineGroup"
+                                    "ApplicationName": "HiDeployment",
+                                    "DeploymentGroupName": "HiDeploymentGroup"
                                 },
                                 "RunOrder": 1
                             }
@@ -237,19 +282,20 @@
                 ]
             }
         },
-        "DeploymentApplication" : {
-			"Type" : "AWS::CodeDeploy::Application",
-			"Properties" : {
-				"ApplicationName" : "AutoDeployment"
+        "DeploymentApplication": {
+			"Type": "AWS::CodeDeploy::Application",
+			"Properties": {
+				"ApplicationName": "HiDeployment"
 			}
 		},
-		"DeploymentGroup" : {
-			"Type" : "AWS::CodeDeploy::DeploymentGroup",
-			"Properties" : {
-				"DeploymentGroupName": "DeploymentGroup",
-				"ApplicationName" : {"Ref" : "DeploymentApplication"},
+		"DeploymentGroup": {
+			"Type": "AWS::CodeDeploy::DeploymentGroup",
+			"Properties": {
+				"DeploymentGroupName": "HiDeploymentGroup",
+                "AutoScalingGroups": [ { "Ref": "AutoScalingGroup" } ],
+				"ApplicationName": { "Ref": "DeploymentApplication" },
 				"DeploymentConfigName": "CodeDeployDefault.OneAtATime",
-				"ServiceRoleArn" : {"Fn::GetAtt" : ["AdminRole", "Arn"] }
+				"ServiceRoleArn": { "Fn::GetAtt": [ "AdminRole", "Arn" ] }
 			}
 		}
     }
