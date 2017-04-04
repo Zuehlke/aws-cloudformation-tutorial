@@ -2,11 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: src/Hi/build/libs/hi-1.0-SNAPSHOT.jar
-    destination: ./
-  - source: deployment_scripts/AppStart.sh
-    destination: ./
-  - source: deployment_scripts/AppStop.sh
-    destination: ./
+    destination: /home/ec2-user
 hooks:
   BeforeInstall:
     - location: deployment_scripts/CleanupOldVersion.sh
