@@ -2,9 +2,9 @@ version: 0.1
 phases:
   build:
     commands:
-      - sed -i -e "s#username_here#${DB_USERNAME}#" src/Hi/src/main/resources/application.properties
-      - sed -i -e "s#password_here#${DB_PASSWORD}#" src/Hi/src/main/resources/application.properties
-      - sed -i -e "s#dbUrl_here#jdbc:mysql://${DB_LINK}:3306/${DB_Name}#" src/Hi/src/main/resources/application.properties
+      - sed -i -e "s#username_here#${DB_USERNAME}#" source_code/Hi/src/main/resources/application.properties
+      - sed -i -e "s#password_here#${DB_PASSWORD}#" source_code/Hi/src/main/resources/application.properties
+      - sed -i -e "s#dbUrl_here#jdbc:mysql://${DB_LINK}:3306/${DB_Name}#" source_code/Hi/src/main/resources/application.properties
       - gradle build -p src/Hi/
 artifacts:
   type: zip
@@ -13,4 +13,4 @@ artifacts:
     - deployment_scripts/AppStart.sh
     - deployment_scripts/AppStop.sh
     - deployment_scripts/CleanupOldVersion.sh
-    - src/Hi/build/libs/hi-1.0-SNAPSHOT.jar
+    - source_code/Hi/build/libs/hi-1.0-SNAPSHOT.jar
