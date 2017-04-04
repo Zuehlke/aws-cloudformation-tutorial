@@ -1,25 +1,13 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
-	"Description": "Sample infrastructure",
+	"Description": "Sample Infrastructure",
 	"Parameters": {
 		"KeyName": {
 			"Description": "Name of an existing EC2 KeyPair to enable SSH access to the instances",
 			"Type": "AWS::EC2::KeyPair::KeyName"
 		},
-		"ServiceRoleName": {
-			"Description": "The name of the service role.",
-			"Type": "String",
-			"MinLength": "1",
-			"MaxLength": "64",
-			"ConstraintDescription": "Must contain only alphanumeric characters or hyphens, and cannot begin or end with a hyphen."
-		},
-		"S3BucketName": {
-			"Description": "The name of the S3 Bucket",
-			"Type": "String",
-			"AllowedPattern": "[a-zA-Z]*"
-		},
 		"DBName": {
-			"Description": "The name of the database",
+			"Description": "Enter the name of the database",
 			"Type": "String",
 			"AllowedPattern": "[a-zA-Z]*"
 		},
@@ -46,16 +34,9 @@
 					"Label" : { "default" : "Database Configuration" },
 					"Parameters" : [ "DBName", "DBUser", "DBPwd"]
 				}
-			,{
+				,{
 					"Label" : { "default" : "EC2 Key Pair" },
 					"Parameters" : ["KeyName"]
-				}
-			,{
-					"Label" : { "default" : "CodeDeploy Role" },
-					"Parameters" : ["ServiceRoleName"]
-				},{
-					"Label" : { "default" : "S3 Bucket" },
-					"Parameters" : ["S3BucketName"]
 				}
 			]
 		}
@@ -74,130 +55,6 @@
 		}
 	},
 	"Resources": {
-<<<<<<< HEAD:template/template.json
-		"CodeDeployTrustRole": {
-			"Type": "AWS::IAM::Role",
-			"Properties": {
-				"AssumeRolePolicyDocument": {
-					"Version": "2012-10-17",
-					"Statement": [
-						{
-							"Sid": "1",
-							"Effect": "Allow",
-							"Principal": {
-								"Service": "codedeploy.amazonaws.com"
-							},
-							"Action": "sts:AssumeRole"
-						}
-					]
-				},
-				"Path": "/",
-				"RoleName": {
-					"Ref": "ServiceRoleName"
-				}
-			}
-		},
-		"CodeDeployRolePolicies": {
-			"Type": "AWS::IAM::Policy",
-			"Properties": {
-				"PolicyName": "CodeDeployPolicy",
-				"PolicyDocument": {
-					"Statement": [
-						{
-							"Effect": "Allow",
-							"Resource": ["*"],
-							"Action": ["ec2:Describe*", "ec2:TerminateInstances"]
-						},
-						{
-							"Effect": "Allow",
-							"Resource": ["*"],
-							"Action": ["autoscaling:*"]
-						},
-						{
-							"Effect": "Allow",
-							"Resource": ["*"],
-							"Action": [
-								"elasticloadbalancing:DescribeLoadBalancers",
-								"elasticloadbalancing:DescribeInstanceHealth",
-								"elasticloadbalancing:RegisterInstancesWithLoadBalancer",
-								"elasticloadbalancing:DeregisterInstancesFromLoadBalancer"
-							]
-						},
-						{
-							"Effect": "Allow",
-							"Resource": ["*"],
-							"Action": [
-								"Tag:getResources",
-								"Tag:getTags",
-								"Tag:getTagsForResource",
-								"Tag:getTagsForResourceList"
-							]
-						}
-					]
-				},
-				"Roles": [
-					{
-						"Ref": "CodeDeployTrustRole"
-					}
-				]
-			}
-		},
-		"InstanceRole": {
-			"Type": "AWS::IAM::Role",
-			"Properties": {
-				"AssumeRolePolicyDocument": {
-					"Statement": [
-						{
-							"Effect": "Allow",
-							"Principal": {
-								"Service": [
-									"ec2.amazonaws.com"
-								]
-							},
-							"Action": [
-								"sts:AssumeRole"
-							]
-						}
-					]
-				},
-				"Path": "/"
-			}
-		},
-		"InstanceRolePolicies": {
-			"Type": "AWS::IAM::Policy",
-			"Properties": {
-				"PolicyName": "InstanceRole",
-				"PolicyDocument": {
-					"Statement": [
-						{
-							"Effect": "Allow",
-							"Action": [
-								"autoscaling:Describe*",
-								"cloudformation:Describe*",
-								"cloudformation:GetTemplate",
-								"s3:Get*"
-							],
-							"Resource": "*"
-						}
-					]
-				},
-				"Roles": [
-					{
-						"Ref": "InstanceRole"
-					}
-				]
-			}
-		},
-		"InstanceRoleInstanceProfile": {
-			"Type": "AWS::IAM::InstanceProfile",
-			"Properties": {
-				"Path": "/",
-				"Roles": [
-					{
-						"Ref": "InstanceRole"
-					}
-				]
-=======
 		"AdminRole": {
 			"Type": "AWS::IAM::Role",
 			"Properties": {
@@ -232,7 +89,6 @@
 			"Roles": [ {
 				"Ref": "AdminRole"
 			} ]
->>>>>>> feature/code-pipeline:template/stack_with_codepipeline/template_stack.json
 			}
 		},
 		"VPC": {
@@ -244,8 +100,7 @@
 		},
 		"InternetGateway": {
 			"Type": "AWS::EC2::InternetGateway",
-			"Properties": {
-			}
+			"Properties": {}
 		},
 		"VPCGatewayAttachment": {
 			"Type": "AWS::EC2::VPCGatewayAttachment",
@@ -341,33 +196,11 @@
 				"CidrBlock": "0.0.0.0/0"
 			}
 		},
-		"S3CodeDeploy": {
-			"Type" : "AWS::S3::Bucket",
-			"Properties" : {
-				"BucketName" : {"Fn::Join": ["", [{"Ref": "AWS::Region"}, "-", {"Ref": "S3BucketName"}]]}
-			}
-		},
-		"CodeDeployApplication" : {
-			"Type" : "AWS::CodeDeploy::Application",
-			"Properties" : {
-				"ApplicationName" : "RestApp"
-			}
-		},
-		"DeploymentGroup" : {
-			"Type" : "AWS::CodeDeploy::DeploymentGroup",
-			"Properties" : {
-				"DeploymentGroupName": "RestGroup",
-				"ApplicationName" : {"Ref" : "CodeDeployApplication"},
-				"AutoScalingGroups" : [ {"Ref" : "AutoScalingGroup" } ],
-				"DeploymentConfigName": "CodeDeployDefault.OneAtATime",
-				"ServiceRoleArn" : {"Fn::GetAtt" : ["CodeDeployTrustRole", "Arn"] }
-			}
-		},
 		"LoadBalancer": {
 			"Type": "AWS::ElasticLoadBalancing::LoadBalancer",
 			"Properties": {
 				"Subnets": [{"Ref": "SubnetA"}, {"Ref": "SubnetB"}],
-				"LoadBalancerName": "sample-elb",
+				"LoadBalancerName": "school-elb",
 				"Listeners": [{
 					"InstancePort": "8080",
 					"InstanceProtocol": "HTTP",
@@ -389,7 +222,7 @@
 		"LoadBalancerSecurityGroup": {
 			"Type": "AWS::EC2::SecurityGroup",
 			"Properties": {
-				"GroupDescription": "sample-elb-sg",
+				"GroupDescription": "school-elb-sg",
 				"VpcId": {"Ref": "VPC"},
 				"SecurityGroupIngress": [{
 					"CidrIp": "0.0.0.0/0",
@@ -402,7 +235,7 @@
 		"WebServerSecurityGroup": {
 			"Type": "AWS::EC2::SecurityGroup",
 			"Properties": {
-				"GroupDescription": "sample-sg",
+				"GroupDescription": "school-sg",
 				"VpcId": {"Ref": "VPC"},
 				"SecurityGroupIngress": [{
 					"CidrIp": "0.0.0.0/0",
@@ -411,12 +244,13 @@
 					"ToPort": "22"
 				}, {
 					"FromPort": "8080",
+					"ToPort": "8080",
 					"IpProtocol": "tcp",
-					"SourceSecurityGroupId": {"Ref": "LoadBalancerSecurityGroup"},
-					"ToPort": "8080"
+					"SourceSecurityGroupId": {"Ref": "LoadBalancerSecurityGroup"}
 				}]
 			}
-		},"DatabaseSecurityGroup": {
+		},
+		"DatabaseSecurityGroup": {
 			"Type": "AWS::EC2::SecurityGroup",
 			"Properties": {
 				"GroupDescription": "database-sg",
@@ -462,12 +296,9 @@
 								"java-1.8.0-openjdk-devel": []
 							}
 						},
-<<<<<<< HEAD:template/template.json
-=======
 						"sources": {
 							"/opt": "https://services.gradle.org/distributions/gradle-3.4.1-bin.zip"
 						},
->>>>>>> feature/code-pipeline:template/stack_with_codepipeline/template_stack.json
 						"files": {
 							"/tmp/java_setup": {
 								"content": {
@@ -475,6 +306,7 @@
 										"\n",
 										[
 											"#!/bin/bash -ex",
+											"chmod -R 755 gradle-3.4.1/",
 											"yum install -y java-1.8.0",
 											"yum remove -y java-1.7.0-openjdk"
 										]
@@ -502,23 +334,11 @@
 				"IamInstanceProfile": { "Ref": "RootInstanceProfile" },
 				"SecurityGroups": [{"Ref": "WebServerSecurityGroup"}],
 				"KeyName": {"Ref": "KeyName"},
-				"IamInstanceProfile": {"Ref": "InstanceRoleInstanceProfile"},
 				"AssociatePublicIpAddress": true,
 				"UserData": {"Fn::Base64": {"Fn::Join": ["", [
 					"#!/bin/bash -ex\n",
 					"yum update -y aws-cfn-bootstrap\n",
 					"/opt/aws/bin/cfn-init -v --stack ", {"Ref": "AWS::StackName"}, " --resource LaunchConfiguration --region ", {"Ref": "AWS::Region"}, "\n",
-<<<<<<< HEAD:template/template.json
-					"yum update -y\n",
-                    "yum install -y ruby\n",
-                    "yum install -y wget\n",
-                    "cd /home/ec2-user\n",
-                    "wget https://aws-codedeploy-",{"Ref": "AWS::Region"},".s3.amazonaws.com/latest/install\n",
-                    "chmod +x ./install\n",
-                    "./install auto\n",
-                    "/opt/aws/bin/cfn-signal -e $? --stack ", {"Ref": "AWS::StackName"}, " --resource AutoScalingGroup --region ", {"Ref": "AWS::Region"}, "\n"
-                ]]}}
-=======
 					"/opt/aws/bin/cfn-signal -e $? --stack ", {"Ref": "AWS::StackName"}, " --resource AutoScalingGroup --region ", {"Ref": "AWS::Region"}, "\n",
 					"yum update -y\n",
 					"yum install ruby\n",
@@ -528,7 +348,6 @@
 					"chmod +x ./install\n",
 					"./install auto\n"
 				]]}}
->>>>>>> feature/code-pipeline:template/stack_with_codepipeline/template_stack.json
 			}
 		},
 		"AutoScalingGroup": {
@@ -550,15 +369,9 @@
 		}
 	},
 	"Outputs": {
-<<<<<<< HEAD:template/template.json
-		"URLRest": {
-			"Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/persons"]]},
-			"Description": "Rest URL"
-=======
 		"URL": {
 			"Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/to-vault"]]},
 			"Description": "URL to send Johannes to the vault."
->>>>>>> feature/code-pipeline:template/stack_with_codepipeline/template_stack.json
 		}
 	}
 }
