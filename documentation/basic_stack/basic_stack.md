@@ -20,4 +20,4 @@ At this point you should you habe the following created AWS resources:
 - *Elastic Compute Cloud (EC2)*, two virtual Linux servers called Amazon Linux. The SpringBoot application with the embedded Tomcat Server will be installed on each virtual server whit help of AWS CodePipeline.
 - *Relational Database Service (RDS)* providing a MySQL database. The Spring Boot application relies on this database.
 
-**Next: [Description of the basic template](../../documentation/basic_stack/basic_stack.md)**
+**Next: [Description of the basic template](../../documentation/basic_stack/template_desc.md)**
