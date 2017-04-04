@@ -7,18 +7,17 @@ We are building a Spring Boot RESTful backend here using only AWS CloudFormation
 
 We are always happy to get your support. If you find anything that could be better, we highly appreciate your feedback. :)
 
-1. Go to [Infrastructure with AWS CodePipeline for continuous- integration and delivery.](#v1)
-2. Go to [Infrastructure with Jenkins for continuous- integration and delivery.](#v2)
-
-
-## <a name="v1">Infrastructure with AWS CodePipeline for continuous- integration and delivery.</a>
-![simple_mockup](doc/images/infrastructure_pipeline.png)
+## Infrastructure with AWS CodePipeline or Jenkins for continuous- integration and delivery.
+![simple_mockup](doc/images/infrastructure.png)
 
 
 ## Description
 For building the infrastructure we will use among others the following AWS services:
 - *Elastic Load Balancing (ELB)* used to distribute the traffic to the web servers behind it.- *Elastic Compute Cloud (EC2)*, two virtual Linux servers called Amazon Linux. The SpringBoot application with the embedded Tomcat Server will be installed on each virtual server whit help of AWS CodePipeline.- *Relational Database Service (RDS)* providing a MySQL database. The Spring Boot application relies on this database.
 - *CodePipeline* a pipe line used for continuous- integration and delivery. It retrieves the last commit from the Git repository, tests, builds the application and after that deploys the application to the EC2 instances.
+
+1. Go to [Infrastructure with AWS CodePipeline for continuous- integration and delivery.](#v1)
+2. Go to [Infrastructure with Jenkins for continuous- integration and delivery.](#v2)
 
 ### How to start asap?
 1. [Create an IAM User and setup the aws cli](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
