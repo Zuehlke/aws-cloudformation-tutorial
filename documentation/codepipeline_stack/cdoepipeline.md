@@ -1,6 +1,6 @@
 ## Infrastructure with Jenkins for continuous- integration and delivery
 
-![simple_mockup](../../documents/images/infrastructure_codepipeline.png)
+![simple_mockup](../../documentation/images/infrastructure_codepipeline.png)
 
 ## Description
 For building the infrastructure we will use among others the following AWS services:
