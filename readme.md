@@ -18,7 +18,7 @@ The infrastructure contains a load balancer, virtual servers, a database and a c
 
 ## Table of Contents
 1. [The basic infrastructure in only five minutes](documentation/basic_stack/basic_stack.md)
-1. [Description of the basic template](documentation/template-desc.md)
+1. [Description of the basic template](documentation/basic_stack/template-desc.md)
 1. [Infrastructure with AWS CodePipeline for continuous- integration and delivery](documentation/codepipeline/readme.md)
 1. [Infrastructure with Jenkins for continuous- integration and delivery](documentation/jenkins/readme.md)
 <br/><br/>
