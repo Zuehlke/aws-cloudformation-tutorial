@@ -1,33 +1,24 @@
 ## Introduction
 
-The goal of this project is to give you a rocket start into AWS CloudFormation service. It should lead you through the process of setting up an infrastructure in AWS in a few minutes with help of this service.
+The goal of this project is to give you a rocket start into AWS CloudFormation. It should lead you through the process of setting up an infrastructure in AWS in a few minutes.
 
-We are building a SpringBoot RESTful backend here using only AWS CloudFormation. We include a MySql database, to which our application automatically connects to.
+The infrastructure provides the following advantages:
 
-We are always happy to get your support. If you find anything that could be better, we highly appreciate your feedback. :)
+- Continuous- integration and delivery.
+- Scalable resources (Virtuelle Serves, Relationale Database)
+- Security (Firewall, IAM Roles, SSL)
 
-## Infrastructure with AWS CodePipeline or Jenkins for continuous- integration and delivery.
-![simple_mockup](documents/images/infrastructure.png)
+We are always happy to get your support. If you find anything that could be done better, we highly appreciate your feedback. :)
 
+## Infrastructure
+The stack contains a load balancer, virtual servers, a database and a continuous-intragation and -delivery environment. A Spring Boot RESTful sample application will be deployed to the infrastructure.
 
-## Description
-For building the infrastructure we will use among others the following AWS services:
-- *Elastic Load Balancing (ELB)* used to distribute the traffic to the web servers behind it.- *Elastic Compute Cloud (EC2)*, two virtual Linux servers called Amazon Linux. The SpringBoot application with the embedded Tomcat Server will be installed on each virtual server whit help of AWS CodePipeline or Jenkins.- *Relational Database Service (RDS)* providing a MySQL database. The SpringBoot application relies on this database.
-- *CodePipeline* **or** *Jenkins* used for continuous- integration and delivery.
+![simple_mockup](documentation/images/infrastructure.png)
 
-
-### How to start asap?
-1. [Create an IAM User and setup the aws cli](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
-1. Create a key called "keyToSuccess" in the [webinterface](https://console.aws.amazon.com/console/home) -> EC2 -> Key Pairs -> *Create Key Pair*
-1. [Download the template](cf_template/template.json)
-1. Open a terminal and insert:
-```bash
-aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack --template-body file:///Users/PATH_TO_TEMPLATE/template.json --parameters ParameterKey=KeyName,ParameterValue=keyToSuccess ParameterKey=DBName,ParameterValue=TheDbName ParameterKey=DBPwd,ParameterValue=Th3P455w0rd ParameterKey=DBUser,ParameterValue=TheDbUser
-```
 
 ## Table of Contents
-1. [Step-By-Step description of the template](documents/template-desc.md)
-1. [The raw template](templates/template.json)
-1. [Infrastructure with AWS CodePipeline for continuous- integration and delivery.](#v1)
-1. [Infrastructure with Jenkins for continuous- integration and delivery.](documents/jenkins/readme.md)
+1. [The basic infrastructure in only five minutes](documentation/basic_stack/basic_stack.md)
+1. [Description of the basic template](documentation/template-desc.md)
+1. [Infrastructure with AWS CodePipeline for continuous- integration and delivery](documentation/codepipeline/readme.md)
+1. [Infrastructure with Jenkins for continuous- integration and delivery](documentation/jenkins/readme.md)
 <br/><br/>
