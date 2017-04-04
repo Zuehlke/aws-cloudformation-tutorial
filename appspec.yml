@@ -2,16 +2,6 @@ version: 0.0
 os: linux
 files:
   - source: src/Hi/build/libs/hi-1.0-SNAPSHOT.jar
-<<<<<<< HEAD
-    destination: /home/ec2-user
-hooks:
- ApplicationStart:
-    - location: scripts/start_app.sh
-      timeout: 300
-      runas: root
-
-
-=======
     destination: ./
   - source: deployment_scripts/AppStart.sh
     destination: ./
@@ -27,4 +17,3 @@ hooks:
   ApplicationStop:
     - location: deployment_scripts/AppStop.sh
       runas: root
->>>>>>> feature/code-pipeline
