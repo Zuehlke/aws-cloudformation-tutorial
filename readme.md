@@ -4,9 +4,9 @@ The goal of this project is to give you a rocket start into AWS CloudFormation. 
 
 The infrastructure provides the following advantages:
 
-- Continuous- integration and delivery.
 - Scalable resources (Virtuelle Serves, Relationale Database)
 - Security (Firewall, IAM Roles, SSL)
+- Continuous- integration and delivery.
 
 We are always happy to get your support. If you find anything that could be done better, we highly appreciate your feedback. :)
 
