@@ -95,7 +95,7 @@ Step by Step description of what happens in the template and where we achieve wh
 ```
 	
 - **Keyname:** The name of the key. This is what we specified as "keyToSuccess". This key is used to connect to your EC2 instances by SSH.
-- **DBName/DBUser/DBPwd:** The name, admin and password of the MySQL Database that will be created (Siehe Abschnitt Resources). We will use these values in *./src/Hi/src/main/resources/application.properties*. This makes sure, that our application connects to the database when it is started.<br/><br/>
+- **DBName/DBUser/DBPwd:** The name, admin and password of the MySQL Database that will be created (See Resources). Later these values will be used in *./src/Hi/src/main/resources/application.properties* file of the Spring Boot application. This makes sure, that the application connects to the database when it is started.<br/><br/>
 
 ```json
 "Metadata" : {
@@ -160,7 +160,7 @@ Step by Step description of what happens in the template and where we achieve wh
 	...
 ```
 
-In this block, we define all the resources we want to allocate.
+In the Resource block, we define all the resources we want to allocate.
 
 - **VPC:** Creates a *Virtual Private Cloud* that covers the CIDR Block 172.31.0.0/16.
 - **InternetGateway:** Lets the resources in the VPC access the internet. Routing tables have to be defined therefore.

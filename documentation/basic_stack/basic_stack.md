@@ -6,7 +6,7 @@ As a first step, we will set up the basic infrastructure.
 ![simple_mockup](../../documentation/images/infrastructure_basic.png)
 
 ## Description
-The infrastructure contains the following AWS resources:
+The basic infrastructure contains the following AWS resources:
 - *Elastic Load Balancing (ELB)* used to distribute the traffic to the web servers behind it.
 - *Elastic Compute Cloud (EC2)*, two virtual Linux servers called Amazon Linux.
 - *Relational Database Service (RDS)* providing a MySQL database.
