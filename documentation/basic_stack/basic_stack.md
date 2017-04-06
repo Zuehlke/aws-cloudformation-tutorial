@@ -14,10 +14,10 @@ The basic infrastructure contains the following AWS resources:
 ## Quick Start
 1. [Create an IAM User and setup the aws cli](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
 1. Create a key called "keyToSuccess" in the [webinterface](https://console.aws.amazon.com/console/home) -> EC2 -> Key Pairs -> *Create Key Pair*
-1. [Download the template](../../templates/stack_basic/template_stack.json)
+1. [Download the template](../../templates/stack_basic/template_basic_stack.json)
 1. Open a terminal and insert:
 ```
-aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack --template-body file:///Users/PATH_TO_TEMPLATE/template.json --parameters ParameterKey=KeyName,ParameterValue=keyToSuccess ParameterKey=DBName,ParameterValue=TheDbName ParameterKey=DBPwd,ParameterValue=Th3P455w0rd ParameterKey=DBUser,ParameterValue=TheDbUser
+aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack --template-body file:///pathToTemplate/template_basic_stack.json --parameters ParameterKey=KeyName,ParameterValue=keyToSuccess ParameterKey=DBName,ParameterValue=TheDbName ParameterKey=DBPwd,ParameterValue=Th3P455w0rd ParameterKey=DBUser,ParameterValue=TheDbUser --capabilities CAPABILITY_IAM
 ```
 <br/><br/>
 
