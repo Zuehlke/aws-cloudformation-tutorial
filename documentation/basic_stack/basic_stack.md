@@ -11,7 +11,7 @@ The basic infrastructure contains the following AWS resources:
 - *Elastic Compute Cloud (EC2)*, two virtual Linux servers called Amazon Linux.
 - *Relational Database Service (RDS)* providing a MySQL database.
 
-## How to start asap?
+## Quick Start
 1. [Create an IAM User and setup the aws cli](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
 1. Create a key called "keyToSuccess" in the [webinterface](https://console.aws.amazon.com/console/home) -> EC2 -> Key Pairs -> *Create Key Pair*
 1. [Download the template](../../templates/stack_basic/template_stack.json)
