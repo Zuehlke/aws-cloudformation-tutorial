@@ -282,28 +282,6 @@
 				"CidrBlock": "0.0.0.0/0"
 			}
 		},
-		"S3CodeDeploy": {
-			"Type" : "AWS::S3::Bucket",
-			"Properties" : {
-				"BucketName" : {"Fn::Join": ["", [{"Ref": "AWS::Region"}, "-", "mysuperbucket"]]}
-			}
-		},
-		"CodeDeployApplication" : {
-			"Type" : "AWS::CodeDeploy::Application",
-			"Properties" : {
-				"ApplicationName" : "RestApp"
-			}
-		},
-		"DeploymentGroup" : {
-			"Type" : "AWS::CodeDeploy::DeploymentGroup",
-			"Properties" : {
-				"DeploymentGroupName": "RestGroup",
-				"ApplicationName" : {"Ref" : "CodeDeployApplication"},
-				"AutoScalingGroups" : [ {"Ref" : "AutoScalingGroup" } ],
-				"DeploymentConfigName": "CodeDeployDefault.OneAtATime",
-				"ServiceRoleArn" : {"Fn::GetAtt" : ["CodeDeployTrustRole", "Arn"] }
-			}
-		},
 		"LoadBalancer": {
 			"Type": "AWS::ElasticLoadBalancing::LoadBalancer",
 			"Properties": {
