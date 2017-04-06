@@ -22,10 +22,21 @@ aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack -
 
 ## Exploring the infrastructure in the AWS Managment Console
 
-1. Go to [https://aws.amazon.com/console/](https://aws.amazon.com/console/) and login.
-1. Create a *Reource Group*. A *Reource Group* is a collection of AWS resources. Resource is an abstract term for something in AWS like an EC2 server, a load balancer, or a RDS database.
-picture here
-1. 
+1. Go to [https://aws.amazon.com/console/](https://aws.amazon.com/console/) and log in.
+1. Under services select *CloudFormation*. If the infrastructure was successfully created you will see CREATE_COMPLETE in the Status column.
+<br/><br/>
+![simple_mockup](../../documentation/images/createdStack.png)
+<br/><br/>
+1. Go to Resource Groups and select *Create a Reource Group*. In *Group name* enter the name you like. In *Tags* enter **theStackKey** and **theStackValue**. In *Regions* enter **US East(N. Virginia)** and click *Save*. 
+<br/><br/>
+![simple_mockup](../../documentation/images/createResourceGroup.png)
+
+
+
+
+
+
+On the left side menu you will find the created resources.
 
 
 
