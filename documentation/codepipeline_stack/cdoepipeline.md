@@ -1,4 +1,4 @@
-## Infrastructure with Jenkins for continuous- integration and delivery
+## Infrastructure with AWS CodePipeline for continuous- integration and delivery
 
 ![simple_mockup](../../documentation/images/infrastructure_codepipeline.png)
 
