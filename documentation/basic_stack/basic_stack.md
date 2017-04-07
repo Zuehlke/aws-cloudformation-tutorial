@@ -13,7 +13,7 @@ The basic infrastructure contains the following AWS resources:
 
 ## Quick Start
 1. [Create an IAM User and setup the aws cli](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
-1. Create a key called "keyToSuccess" in the [webinterface](https://console.aws.amazon.com/console/home) -> EC2 -> Key Pairs -> *Create Key Pair*
+1. Create a key called "keyToSuccess" in the [AWS Managment Console](https://console.aws.amazon.com/console/home) -> EC2 -> Key Pairs -> *Create Key Pair*
 1. [Download the template](../../templates/stack_basic/template_basic_stack.json)
 1. Open a terminal and insert the following command: 
 ```
@@ -23,21 +23,18 @@ aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack -
 ## Exploring the infrastructure in the AWS Managment Console
 
 1. Go to [https://aws.amazon.com/console/](https://aws.amazon.com/console/) and log in.
-1. Under services select *CloudFormation*. If the infrastructure was successfully created you will see CREATE_COMPLETE in the Status column.
+1. Under *Services* select *CloudFormation*. If the infrastructure was successfully created you will see CREATE_COMPLETE in the Status column.
 <br/><br/>
 ![simple_mockup](../../documentation/images/createdStack.png)
 <br/><br/>
-1. Go to Resource Groups and select *Create a Reource Group*. In *Group name* enter the name you like. In *Tags* enter **theStackKey** and **theStackValue**. In *Regions* enter **US East(N. Virginia)** and click *Save*. 
+1. Under *Resource Groups* select *Create a Reource Group*. In *Group name* enter the name you like. In *Tags* enter **theStackKey** and **theStackValue**. In *Regions* enter **US East(N. Virginia)** and click *Save*. 
 <br/><br/>
 ![simple_mockup](../../documentation/images/createResourceGroup.png)
-
-
-
-
-
-
-On the left side menu you will find the created resources.
-
+<br/><br/>
+1. On the left side menu you will find the created resources.
+<br/><br/>
+![simple_mockup](../../documentation/images/stackResources.png)
+<br/><br/><br/><br/>
 
 
 
