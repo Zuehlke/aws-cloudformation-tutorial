@@ -1,18 +1,14 @@
 ## The basic infrastructure in only five minutes
-As a first step, we will set up the basic infrastructure. 
-
-
-## Infrastructure 
-![simple_mockup](../../documentation/images/infrastructure_basic.png)
-
-## Description
-The basic infrastructure contains the following AWS resources:
+As a first step, we will set up the basic infrastructure. It contains the following AWS resources:
 - *Elastic Load Balancing (ELB)* used to distribute the traffic to the web servers behind it.
 - *Elastic Compute Cloud (EC2)*, two virtual Linux servers called Amazon Linux.
 - *Relational Database Service (RDS)* providing a MySQL database.
 
+## Infrastructure 
+![simple_mockup](../../documentation/images/infrastructure_basic.png)
+
 ## Quick Start
-1. [Create an IAM User and setup the aws cli](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
+1. [Create an IAM User and setup the AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
 1. Create a key called "keyToSuccess" in the [AWS Managment Console](https://console.aws.amazon.com/console/home) -> EC2 -> Key Pairs -> *Create Key Pair*
 1. [Download the template](../../templates/stack_basic/template_basic_stack.json)
 1. Open a terminal and insert the following command: 
@@ -31,7 +27,7 @@ aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack -
 <br/><br/>
 ![simple_mockup](../../documentation/images/createResourceGroup.png)
 <br/><br/>
-1. On the left side menu you will find the created resources.
+1. On the left side menu you will find the created resources. You can click on them to see more details.
 <br/><br/>
 ![simple_mockup](../../documentation/images/stackResources.png)
 <br/><br/><br/><br/>
