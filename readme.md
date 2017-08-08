@@ -15,7 +15,7 @@ If you have any feedback/questions, we'd love to get in touch with you! :)
 Or join our telegram group:
 @awsCloudformationTutorial
 
-Disclaimer: This project is WIP. We continuely seek to improve it!
+**Disclaimer:** This project is WIP. We continuely seek to improve it!
 
 ## Infrastructure
 The infrastructure contains a load balancer, virtual servers, a database and a continuous-intragation and -delivery environment. A Spring Boot RESTful sample application will be deployed to the infrastructure.

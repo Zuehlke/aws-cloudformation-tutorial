@@ -1,4 +1,4 @@
-## Infrastructure with AWS CodePipeline for continuous- integration and delivery
+## Infrastructure with AWS CodePipeline for Continuous Integration and Delivery
 
 ![simple_mockup](../../documentation/images/infrastructure_codepipeline.png)
 
