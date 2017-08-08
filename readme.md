@@ -1,12 +1,12 @@
 ## Introduction
 
-The goal of this project is to give you a rocket start into AWS CloudFormation. It should lead you through the process of setting up an infrastructure in AWS in a few minutes.
+The goal of this project is to give you a rocket start into AWS CloudFormation. It should lead you through the process of setting up a basic infrastructure in AWS in a few minutes, while covering the most common services.
 
-The infrastructure provides the following advantages:
+The infrastructure focuses on the following advantages AWS provides:
 
-- Scalable resources (Virtuelle Serves, Relationale Database)
+- Scalable resources (virtual servers, relational databases)
 - Security (Firewall, IAM Roles, SSL)
-- Continuous- integration and delivery.
+- Continuous Integration and Delivery (only a push to Github will update our servers)
 
 If you have any feedback/questions, we'd love to get in touch with you! :)
 - yandy.piedra@zuehlke.com
@@ -15,10 +15,10 @@ If you have any feedback/questions, we'd love to get in touch with you! :)
 Or join our telegram group:
 @awsCloudformationTutorial
 
-**Disclaimer:** This project is WIP. We continuely seek to improve it!
+**Disclaimer:** This project is WIP. We continually seek to improve it!
 
 ## Infrastructure
-The infrastructure contains a load balancer, virtual servers, a database and a continuous-intragation and -delivery environment. A Spring Boot RESTful sample application will be deployed to the infrastructure.
+The infrastructure contains a load balancer, virtual servers, a database and a Continuous Integration and Delivery environment. A Spring Boot RESTful sample application will be deployed and managed by our environment.
 
 ![simple_mockup](documentation/images/infrastructure.png)
 
