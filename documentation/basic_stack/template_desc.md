@@ -560,6 +560,6 @@ The *AutoScalingGroup* block creates an auto scaling group.
 - **Outputs:** After successful stack creation, everything you define in the output-block will be printed out. In our example, we print the *URL* to our Restful Webservice. We also print a *Description* which describes our URL.
 
 
-**Next: [Infrastructure with AWS CodePipeline for continuous integration and delivery](../../documentation/codepipeline_stack/codepipeline.md)**
+**Next: [Infrastructure with AWS CodePipeline for Continuous Integration and Delivery](../../documentation/codepipeline_stack/codepipeline.md)**
 
-**Next: [Infrastructure with Jenkins for continuous integration and delivery](../../documentation/jenkins_stack/jenkins.md)**
+**Next: [Infrastructure with Jenkins for Continuous Integration and Delivery](../../documentation/jenkins_stack/jenkins.md)**
