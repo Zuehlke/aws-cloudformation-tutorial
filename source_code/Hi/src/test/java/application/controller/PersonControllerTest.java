@@ -1,7 +1,6 @@
 package application.controller;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,9 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -22,8 +20,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PersonControllerTest {
 
     private MockMvc mockMvc;
+
     @Mock
     private PersonService personService;
+
     @InjectMocks
     private PersonController controller;
 
@@ -33,9 +33,16 @@ public class PersonControllerTest {
     }
 
     @Test
-    @Ignore //TODO
+    public void testCheckHealth() throws Exception {
+        mockMvc.perform(get("/")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("The application is running! :)"));
+    }
+
+    @Test
     public void testSaveSomethingToDB() throws Exception {
-        mockMvc.perform(get("/to-vault")
+        mockMvc.perform(get("/database")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

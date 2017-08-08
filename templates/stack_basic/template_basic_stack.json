@@ -34,7 +34,7 @@
 					"Label" : { "default" : "Database Configuration" },
 					"Parameters" : [ "DBName", "DBUser", "DBPwd"]
 				}
-			,{
+				,{
 					"Label" : { "default" : "EC2 Key Pair" },
 					"Parameters" : ["KeyName"]
 				}
@@ -449,9 +449,17 @@
 		}
 	},
 	"Outputs": {
-		"URL": {
-			"Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/to-vault"]]},
-			"Description": "URL to send Johannes to the vault."
+		"LoadBalancerUrl": {
+			"Description": "URL to access the application",
+			"Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}]]}
+		},
+		"DBLink": {
+			"Description": "DB-endpoint our application connects to",
+			"Value": {"Fn::GetAtt": ["Database", "Endpoint.Address"]}
+		},
+		"AutoScalingGroupName": {
+			"Description": "The name of the AutoScalingGroup",
+			"Value": {"Ref": "AutoScalingGroup"}
 		}
 	}
 }

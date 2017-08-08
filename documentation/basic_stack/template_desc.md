@@ -551,7 +551,7 @@ The *AutoScalingGroup* block creates an auto scaling group.
 
 ```json
 "Outputs": {
-	"URL": {"Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}, "/hi"]]},
+	"URL": {"Value": {"Fn::Join": ["", ["http://", {"Fn::GetAtt": ["LoadBalancer", "DNSName"]}]]},
 	"Description": "Rest Webservice URL"
 	}
 }
@@ -560,6 +560,6 @@ The *AutoScalingGroup* block creates an auto scaling group.
 - **Outputs:** After successful stack creation, everything you define in the output-block will be printed out. In our example, we print the *URL* to our Restful Webservice. We also print a *Description* which describes our URL.
 
 
-**Next: [Infrastructure with AWS CodePipeline for continuous- integration and delivery](../../documentation/codepipeline_stack/cdoepipeline.md)**
+**Next: [Infrastructure with AWS CodePipeline for continuous integration and delivery](../../documentation/codepipeline_stack/codepipeline.md)**
 
-**Next: [Infrastructure with Jenkins for continuous- integration and delivery](../../documentation/jenkins_stack/jenkins.md)**
+**Next: [Infrastructure with Jenkins for continuous integration and delivery](../../documentation/jenkins_stack/jenkins.md)**
