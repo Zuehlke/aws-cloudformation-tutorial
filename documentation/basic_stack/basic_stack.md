@@ -23,15 +23,15 @@ aws cloudformation create-stack --region us-east-1 --stack-name theStackIsBack -
 1. Go to [https://aws.amazon.com/console/](https://aws.amazon.com/console/) and log in.
 1. Under *Services* select *CloudFormation*. If the infrastructure was successfully created you will see CREATE_COMPLETE in the Status column.
 <br/><br/>
-![simple_mockup](../../documentation/images/createdStack.png)
+![simple_mockup](../../documentation/images/created_stack.png)
 <br/><br/>
 1. Under *Resource Groups* select *Create a Reource Group*. In *Group name* enter the name you like. In *Tags* enter **theStackKey** and **theStackValue**. In *Regions* enter **US East(N. Virginia)** and click *Save*. 
 <br/><br/>
-![simple_mockup](../../documentation/images/createResourceGroup.png)
+![simple_mockup](../images/create_resource_group.png)
 <br/><br/>
 1. On the left side menu you will find the created resources. You can click on them to see more details.
 <br/><br/>
-![simple_mockup](../../documentation/images/stackResources.png)
+![simple_mockup](../images/stack_resources.png)
 <br/><br/><br/><br/>
 
 
