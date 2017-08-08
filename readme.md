@@ -8,15 +8,6 @@ The infrastructure focuses on the following advantages AWS provides:
 - Security (Firewall, IAM Roles, SSL)
 - Continuous Integration and Delivery (only a push to Github will update our servers)
 
-If you have any feedback/questions, we'd love to get in touch with you! :)
-- yandy.piedra@zuehlke.com
-- raphael.lueckl@zuehlke.com
-
-Or join our telegram group:
-@awsCloudformationTutorial
-
-**Disclaimer:** This project is WIP. We continually seek to improve it!
-
 ## Infrastructure
 The infrastructure contains a load balancer, virtual servers, a database and a Continuous Integration and Delivery environment. A Spring Boot RESTful sample application will be deployed and managed by our environment.
 
@@ -28,6 +19,17 @@ The infrastructure contains a load balancer, virtual servers, a database and a C
 1. [Infrastructure with AWS CodePipeline for Continuous Integration and Delivery](documentation/codepipeline_stack/codepipeline.md)
 1. [Infrastructure with Jenkins for Continuous Integration and Delivery](documentation/jenkins_stack/jenkins.md)
 <br/><br/>
+
+## Feedback
+
+If you have any feedback/questions, we'd love to get in touch with you! :)
+- yandy.piedra@zuehlke.com
+- raphael.lueckl@zuehlke.com
+
+Or join our telegram group:
+@awsCloudformationTutorial
+
+**Disclaimer:** This project is WIP. We continually seek to improve it!
 
 ## TODO
 - [x] Setup basic cloud environment
