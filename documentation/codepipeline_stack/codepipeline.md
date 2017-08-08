@@ -14,7 +14,7 @@ For building the infrastructure we will use among others the following AWS servi
 1. Make sure that you've started the [first stack](../basic_stack/basic_stack.md) and it is successfully running. Status: *CREATE_COMPLETE* when you type: aws cloudformation describe-stacks --stack-name theStackIsBack --region us-east-1 | grep StackStatus
 1. You need the outputs from the basic stack you created before. Using the console, you can type the following command to obtain the necessary values:
 ```
-aws cloudformation describe-stacks --stack-name theStackIsBack --region eu-central-1 | grep -C 1 "OutputValue"
+aws cloudformation describe-stacks --stack-name theStackIsBack --region us-east-1 | grep -C 1 "OutputValue"
 ```
 We need the "OutputValue" of the AutoScalingGroupName and the the DBLink
 1. [Download the CodePipeline-Template](../../templates/stack_with_codepipeline/template_codepipeline.json)

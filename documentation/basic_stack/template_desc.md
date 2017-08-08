@@ -135,7 +135,7 @@ Step by Step description of what happens in the template and where we achieve wh
 ...
 ```
 
-- **EC2RegionMap:** A map that contains different keys (region names). Each key contains a name-value pair representing the [AMI](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) ID for the AMI Name in the region represented by the key. If we create our stack in the region eu-central-1 (Frankfurt), the AMI ID of this region will be used to create our EC2 intances.<br/><br/>
+- **EC2RegionMap:** A map that contains different keys (region names). Each key contains a name-value pair representing the [AMI](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) ID for the AMI Name in the region represented by the key. If we create our stack in the region us-east-1 (Virginia), the AMI ID of this region will be used to create our EC2 intances.<br/><br/>
 
 ```json
 "Resources": {
