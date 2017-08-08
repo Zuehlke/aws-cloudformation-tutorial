@@ -1,33 +1,38 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
-	"Description": "Pipeline test",
+	"Description": "CodePipeline setup",
 	"Parameters": {
 		"KeyName": {
 			"Description": "Name of an existing EC2 KeyPair to enable SSH access to the instances",
 			"Type": "AWS::EC2::KeyPair::KeyName"
 		},
         "GitHubRepo": {
+            "Description": "Github repository you want to access, e.g. 'aws-cloudformation-tutorial'",
             "Type": "String"
         }, 
         "GitHubBranch": {
+            "Description": "Branch of the repo you want to access, e.g. 'master'",
             "Type": "String"
         }, 
         "GitHubToken": {
+            "Description": "The Github access token, e.g. '7fb4f52384f4dfe458fe53bccefb093e3b3551ff'",
             "Type": "String"
         }, 
         "GitHubUser": {
+            "Description": "User who is hosting the repository, e.g. 'Zuehlke'",
             "Type": "String"
         },
         "AutoScalingGroup": {
+            "Description": "Name of the AutoScalingGroup, e.g. 'theStackIsBack-AutoScalingGroup-B5CB7SQ0911Z'",
             "Type": "String"
         },
         "DBName": {
-			"Description": "Enter the name of the database",
+			"Description": "Name of the database, e.g. 'TheDbName'",
 			"Type": "String",
 			"AllowedPattern": "[a-zA-Z]*"
 		},
 		"DBUser" : {
-			"Description" : "The database admin username",
+			"Description" : "The database admin username, e.g. 'TheDbUser'",
 			"Type" : "String",
 			"MinLength" : "1",
 			"MaxLength" : "41",
@@ -35,17 +40,18 @@
 		},
 		"DBPwd" : {
 			"NoEcho" : "true",
-			"Description" : "The database admin password",
+			"Description" : "The database admin password, e.g. 'Th3P455w0rd'",
 			"Type" : "String",
 			"MinLength" : "8",
 			"MaxLength" : "41",
 			"AllowedPattern" : "[a-zA-Z0-9]*"
 		},
         "DBLink": {
-            "Description" : "The PLAIN database DNS, no ports, dbname or anything",
+            "Description" : "The plain database endpoint, e.g. 'cool-db.ctdrewbv8mup.us-east-1.rds.amazonaws.com'",
             "Type": "String"
         }
 	},
+
 	"Mappings": {
 		"EC2RegionMap": {
 			"ap-northeast-1": {"AmazonLinuxAMIHVMEBSBacked64bit": "ami-cbf90ecb"},
@@ -59,32 +65,33 @@
 			"us-west-2": {"AmazonLinuxAMIHVMEBSBacked64bit": "ami-e7527ed7"}
 		}
 	},
+    
     "Resources": {
         "AdminRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
             "AssumeRolePolicyDocument": {
                 "Version" : "2012-10-17",
-                "Statement": [ {
+                "Statement": [{
                     "Effect": "Allow",
                     "Principal": {
-                        "Service": [ "ec2.amazonaws.com", "cloudformation.amazonaws.com", "codedeploy.amazonaws.com", "codepipeline.amazonaws.com", "codebuild.amazonaws.com", "s3.amazonaws.com" ]
+                        "Service": ["ec2.amazonaws.com", "cloudformation.amazonaws.com", "codedeploy.amazonaws.com", "codepipeline.amazonaws.com", "codebuild.amazonaws.com", "s3.amazonaws.com"]
                     },
-                    "Action": [ "sts:AssumeRole" ]
-                } ]
+                    "Action": ["sts:AssumeRole"]
+                }]
             },
             "Path": "/",
-            "Policies": [ {
+            "Policies": [{
                 "PolicyName": "root",
                 "PolicyDocument": {
                     "Version" : "2012-10-17",
-                    "Statement": [ {
+                    "Statement": [{
                         "Effect": "Allow",
                         "Action": "*",
                         "Resource": "*"
-                    } ]
+                    }]
                 }
-                } ]
+                }]
             }
         },
         "CodePipelineServiceRole": {
@@ -95,36 +102,32 @@
                 }, 
                 "Path": "/", 
                 "AssumeRolePolicyDocument": "{\n    \"Statement\": [{\n        \"Effect\": \"Allow\",\n        \"Principal\": { \"Service\": [ \"codepipeline.amazonaws.com\" ]},\n        \"Action\": [ \"sts:AssumeRole\" ]\n    }]\n}\n", 
-                "Policies": [
-                    {
-                        "PolicyName": "root", 
-                        "PolicyDocument": {
-                            "Version": "2012-10-17", 
-                            "Statement": [
-                                {
-                                    "Resource": [ "*" ], 
-                                    "Effect": "Allow", 
-                                    "Action": [
-                                        "s3:PutObject", 
-                                        "s3:GetObject", 
-                                        "s3:GetObjectVersion", 
-                                        "s3:GetBucketVersioning"
-                                    ]
-                                }, 
-                                {
-                                    "Resource": "*", 
-                                    "Effect": "Allow", 
-                                    "Action": [
-                                        "codebuild:StartBuild", 
-                                        "codebuild:BatchGetBuilds", 
-                                        "cloudformation:*", 
-                                        "iam:PassRole"
-                                    ]
-                                }
-                            ]
-                        }
+                "Policies": [{
+                    "PolicyName": "root", 
+                    "PolicyDocument": {
+                        "Version": "2012-10-17", 
+                        "Statement": [{
+                            "Resource": [ "*" ], 
+                            "Effect": "Allow", 
+                            "Action": [
+                                "s3:PutObject", 
+                                "s3:GetObject", 
+                                "s3:GetObjectVersion", 
+                                "s3:GetBucketVersioning"
+                            ]}, 
+                            {
+                                "Resource": "*", 
+                                "Effect": "Allow", 
+                                "Action": [
+                                    "codebuild:StartBuild", 
+                                    "codebuild:BatchGetBuilds", 
+                                    "cloudformation:*", 
+                                    "iam:PassRole"
+                                ]
+                            }
+                        ]
                     }
-                ]
+                }]
             }
         }, 
 

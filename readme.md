@@ -25,20 +25,20 @@ The infrastructure contains a load balancer, virtual servers, a database and a c
 ## Table of Contents
 1. [The basic infrastructure in only five minutes](documentation/basic_stack/basic_stack.md)
 1. [Description of the basic template](documentation/basic_stack/template_desc.md)
-1. [Infrastructure with AWS CodePipeline for continuous- integration and delivery](documentation/codepipeline_stack/cdoepipeline.md)
-1. [Infrastructure with Jenkins for continuous- integration and delivery](documentation/jenkins_stack/jenkins.md)
+1. [Infrastructure with AWS CodePipeline for Continuous Integration and Delivery](documentation/codepipeline_stack/codepipeline.md)
+1. [Infrastructure with Jenkins for Continuous Integration and Delivery](documentation/jenkins_stack/jenkins.md)
 <br/><br/>
 
 ## TODO
 - [x] Setup basic cloud environment
 - [x] Setup CodePipeline
 - [x] How to CodePipeline
-- [x] Setup jenkins
+- [x] Setup Jenkins
 - [ ] How to Jenkins
 - [x] Minimalize/optimize application
 - [x] Output the name of the AutoScalingGroup
-- [x] Explain GithubToken and how to obtain it
-- [ ] Tighten SecurityGroups rules
-- [ ] On destroy stack: S3 bucket needs to be cleaned up automatically for the codepipeline template
-- [ ] Avoid 1-line YAML-files within the templates
+- [x] Explain Github-Tokena and how to obtain them
+- [ ] Tighten SecurityGroup rules
+- [ ] On destroy stack: S3 bucket needs to be cleaned up automatically for the CodePipeline template
+- [ ] Avoid 1-line YAML-strings within the templates
 - [ ] Console commands for CloudFormation are way to big. Separate parts to JSON file.
